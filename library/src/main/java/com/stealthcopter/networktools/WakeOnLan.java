@@ -1,26 +1,39 @@
-package com.stealthcopter.networktools.wakeonlan;
+package com.stealthcopter.networktools;
 
 import android.util.Log;
-
-import com.stealthcopter.networktools.Const;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 
 /**
  * Created by mat on 09/12/15.
+ *
+ * Ref: http://www.jibble.org/wake-on-lan/
  */
 public class WakeOnLan {
 
-    // http://www.jibble.org/wake-on-lan/
+    public static final int DEFAULT_PORT = 9;
+    public static final int DEFAULT_TIMEOUT_MILLIS = 10000;
 
-    public static final int PORT = 9;
+    /**
+     * Send a Wake-On-Lan packet to port 9 using default timeout of 10s
+     * @param ipStr - IP String to send to
+     * @param macStr - MAC address to wake up
+     */
+    public static void sendWakeOnLan(String ipStr, String macStr) throws IOException, IllegalArgumentException {
+        sendWakeOnLan(ipStr, macStr, DEFAULT_PORT, DEFAULT_TIMEOUT_MILLIS);
+    }
 
-    public static void sendWakeOnLan(String ipStr, String macStr) throws UnknownHostException, SocketException, IOException {
+    /**
+     * Send a Wake-On-Lan packet
+     * @param ipStr - IP String to send to
+     * @param macStr - MAC address to wake up
+     * @param port - port to send packet to
+     * @param timeoutMillis - timeout (millis)
+     */
+    public static void sendWakeOnLan(String ipStr, String macStr, int port, int timeoutMillis) throws IOException, IllegalArgumentException {
 
         byte[] macBytes = getMacBytes(macStr);
         byte[] bytes = new byte[6 + 16 * macBytes.length];
@@ -32,12 +45,11 @@ public class WakeOnLan {
         }
 
         InetAddress address = InetAddress.getByName(ipStr);
-        String host = address.getHostName();
 
-        DatagramPacket packet = new DatagramPacket(bytes, bytes.length, address, PORT);
+        DatagramPacket packet = new DatagramPacket(bytes, bytes.length, address, port);
         DatagramSocket socket = new DatagramSocket();
 
-//        socket.setSoTimeout(1000);
+        socket.setSoTimeout(timeoutMillis);
 
         socket.send(packet);
         socket.close();
@@ -45,6 +57,12 @@ public class WakeOnLan {
         Log.d(Const.TAG, "Wake-on-LAN packet sent.");
     }
 
+    /**
+     * Convert a MAC string to bytes
+     * @param macStr - MAC string
+     * @return - MAC formatted in bytes
+     * @throws IllegalArgumentException
+     */
     private static byte[] getMacBytes(String macStr) throws IllegalArgumentException {
         byte[] bytes = new byte[6];
         String[] hex = macStr.split("(\\:|\\-)");
