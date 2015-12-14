@@ -2,8 +2,6 @@ package com.stealthcopter.networktools.ping;
 
 import android.util.Log;
 
-import com.stealthcopter.networktools.Const;
-
 import java.io.IOException;
 import java.net.InetAddress;
 
@@ -21,14 +19,13 @@ public class PingTools {
         // Try native ping first
         try{
             PingResult result = PingTools.doNativePing(ia, timeOutMillis);
-            Log.e(Const.TAG, "Native ping worked :)");
             return result;
         }
         catch (Exception e){
 
         }
 
-        Log.e(Const.TAG, "Native ping failed, using java");
+        Log.v("AndroidNetworkTools", "Native ping failed, using java");
 
         // Fallback to java based ping
         return PingTools.doJavaPing(ia, timeOutMillis);

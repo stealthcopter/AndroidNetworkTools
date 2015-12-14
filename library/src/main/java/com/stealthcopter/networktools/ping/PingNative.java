@@ -2,8 +2,6 @@ package com.stealthcopter.networktools.ping;
 
 import android.util.Log;
 
-import com.stealthcopter.networktools.Const;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -77,7 +75,7 @@ public class PingNative {
      * @param s
      */
     public static PingResult getPingStats(PingResult pingResult, String s) {
-        Log.d(Const.TAG, "Ping String: "+s);
+        Log.v("AndroidNetworkTools", "Ping String: "+s);
         String pingError;
         if (s.contains("0% packet loss")) {
             int start = s.indexOf("/mdev = ");

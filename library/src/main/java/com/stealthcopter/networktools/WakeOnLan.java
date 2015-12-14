@@ -57,7 +57,6 @@ public class WakeOnLan {
         socket.send(packet);
         socket.close();
 
-        Log.d(Const.TAG, "Wake-on-LAN packet sent.");
     }
 
     /**
