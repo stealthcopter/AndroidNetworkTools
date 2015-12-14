@@ -20,6 +20,7 @@ public class Ping {
     private InetAddress address;
     private int timeOutMillis = 1000;
     private int times = 1;
+    private boolean cancelled = false;
 
     /**
      * Set the address to ping
@@ -66,38 +67,50 @@ public class Ping {
         return this;
     }
 
-
     private void setAddress(InetAddress address) {
         this.address = address;
     }
 
-
+    /**
+     * Cancel a running ping
+     */
+    public void cancel() {
+        this.cancelled = true;
+    }
 
     /**
-     * Perform a synchrnous ping and return a result, will ignore number of times.
+     * Perform a synchronous ping and return a result, will ignore number of times.
      * @return - ping result
      */
     public PingResult doPing(){
+        cancelled = false;
         return PingTools.doPing(address, timeOutMillis);
     }
 
     /**
      * Perform an asynchronous ping
      * @param pingListener - the listener to fire PingResults to.
-     * @return - ping result
+     * @return - this so we can cancel if needed
      */
-    public void doPing(PingListener pingListener){
-        // TODO: In background thread
-        // TODO: Cancel
-        int noPings = times;
+    public Ping doPing(final PingListener pingListener){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                cancelled = false;
 
-        while(noPings>0){
-            PingResult pingResult = PingTools.doPing(address, timeOutMillis);
-            if (pingListener!=null){
-                pingListener.onResult(pingResult);
+                int noPings = times;
+
+                while(noPings>0){
+                    PingResult pingResult = PingTools.doPing(address, timeOutMillis);
+                    if (pingListener!=null){
+                        pingListener.onResult(pingResult);
+                    }
+                    noPings--;
+                    if (cancelled) break;
+                }
             }
-            noPings--;
-        }
+        }).start();
+        return this;
     }
 
 

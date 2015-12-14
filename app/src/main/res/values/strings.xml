@@ -4,4 +4,5 @@
   <string name="hint_ip_address">IP Address</string>
   <string name="ping">Ping</string>
   <string name="wol">Wake-On-Lan</string>
+  <string name="port_scan">Port Scan</string>
 </resources>

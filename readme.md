@@ -3,15 +3,19 @@
 Collection of handy networking tools for android.
 
 * Ping
+* Port Scanning
 * Wake-On-Lan
-* 
+* & More :)
 
 ## General info
 
 
-
-
 ## Usage
+
+Requires internet permission
+```xml
+  <uses-permission android:name="android.permission.INTERNET" />
+```
 
 ### Ping
 ```java
@@ -27,13 +31,38 @@ Collection of handy networking tools for android.
     });
 ```
 
+### Port Scanning
+
+```java
+    // Synchronously 
+    ArrayList<Integer> openPorts = PortScan.onAddress("192.168.0.1").setPort(21).doScan();
+    
+    // Asynchronously
+    PortScan.onAddress("192.168.0.1").setTimeOutMillis(1000).setPortsAll().doScan(new PortScan.PortListener() {
+      @Override
+      public void onResult(int portNo, boolean open) {
+        if (open) // Stub: found open port
+      }
+
+      @Override
+      public void onFinished(ArrayList<Integer> openPorts) {
+	// Stub: finished scanning
+      }
+    });
+
+```
+
 ### Wake-On-Lan
-```java      
+
+```java
+      String ipAddress = "192.168.0.1";
+      String macAddress = "01:23:45:67:89:ab";
       WakeOnLan.sendWakeOnLan(ipAddress, macAddress);
 ```
 
 ### Misc
-```java      
+```java
+      String ipAddress = "192.168.0.1";
       String macAddress = ARPInfo.getMacFromArpCache(ipAddress);
 ```
 

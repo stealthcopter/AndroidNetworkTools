@@ -10,6 +10,9 @@ import java.net.InetAddress;
 /**
  * Created by mat on 09/12/15.
  *
+ * Not done a lot of testing on this class and Wake-on-Lan is a pain in the ass to debug, so
+ * use at your own risk.
+ *
  * Ref: http://www.jibble.org/wake-on-lan/
  */
 public class WakeOnLan {
