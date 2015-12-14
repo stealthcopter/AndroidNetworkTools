@@ -20,13 +20,25 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editIpAddress"
+        <!-- Dummy item to prevent EditText from receiving focus -->
+        <LinearLayout
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_width="0px"
+            android:layout_height="0px"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/to_text_input_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/hint_ip_address"
-            android:inputType="textNoSuggestions"
-            android:text="192.168.0.1"/>
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/editIpAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_ip_address"
+                android:inputType="textNoSuggestions"
+                android:text="192.168.0.1"/>
+        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

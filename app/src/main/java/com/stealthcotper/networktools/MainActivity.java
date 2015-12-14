@@ -99,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
       public void onResult(PingResult pingResult) {
         appendResultsText(String.format("%.2f ms",pingResult.getTimeTaken()));
       }
+
+      @Override
+      public void onFinished() {
+
+      }
     });
 
   }

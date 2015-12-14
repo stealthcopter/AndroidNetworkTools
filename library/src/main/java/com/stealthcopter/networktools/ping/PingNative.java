@@ -22,8 +22,7 @@ public class PingNative {
         int timeoutSeconds = timeoOutMillis/1000;
         if (timeoutSeconds<0) timeoutSeconds=1;
 
-        Log.v(Const.TAG, "About to activity_ping using runtime.exec, timeout: "+timeoutSeconds+"s");
-        Process proc = runtime.exec("activity_ping -c 1 -w "+timeoutSeconds+" "+ host.getHostName());
+        Process proc = runtime.exec("ping -c 1 -w "+timeoutSeconds+" "+ host.getHostName());
         proc.waitFor();
         int exit = proc.exitValue();
         String pingError;

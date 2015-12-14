@@ -15,10 +15,12 @@ public class Ping {
 
     public interface PingListener{
         void onResult(PingResult pingResult);
+        void onFinished();
     }
 
     private InetAddress address;
     private int timeOutMillis = 1000;
+    private int delayBetweenScansMillis = 0;
     private int times = 1;
     private boolean cancelled = false;
 
@@ -56,13 +58,25 @@ public class Ping {
         this.timeOutMillis = timeOutMillis;
         return this;
     }
+
+    /**
+     * Set the delay between each ping
+     * @param delayBetweenScansMillis - the timeout for each ping in milliseconds
+     * @return this object to allow chaining
+     */
+    public Ping setDelayMillis(int delayBetweenScansMillis){
+        if (delayBetweenScansMillis<0) throw new IllegalArgumentException("Delay cannot be less than 0");
+        this.delayBetweenScansMillis = delayBetweenScansMillis;
+        return this;
+    }
+
     /**
      * Set number of times to ping the address
      * @param noTimes - number of times, 0 = continuous
      * @return this object to allow chaining
      */
     public Ping setTimes(int noTimes){
-        if (noTimes<=0) throw new IllegalArgumentException("Times cannot be less than 1");
+        if (noTimes<0) throw new IllegalArgumentException("Times cannot be less than 0");
         this.times = noTimes;
         return this;
     }
@@ -97,16 +111,22 @@ public class Ping {
             @Override
             public void run() {
                 cancelled = false;
-
                 int noPings = times;
 
-                while(noPings>0){
+                // times == 0 is the case that we can continuous scanning
+                while(noPings>0 || times == 0){
                     PingResult pingResult = PingTools.doPing(address, timeOutMillis);
                     if (pingListener!=null){
                         pingListener.onResult(pingResult);
                     }
                     noPings--;
                     if (cancelled) break;
+
+                    try {
+                        Thread.sleep(delayBetweenScansMillis);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }).start();
