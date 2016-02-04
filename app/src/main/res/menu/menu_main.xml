@@ -4,9 +4,10 @@
     tools:context="com.stealthcotper.networktools.MainActivity"
     >
   <item
-      android:id="@+id/action_settings"
-      android:title="@string/action_settings"
+      android:id="@+id/action_github"
+      android:title="@string/github_page"
       android:orderInCategory="100"
-      app:showAsAction="never"
+      android:icon="@mipmap/ic_action_github"
+      app:showAsAction="always"
       />
 </menu>

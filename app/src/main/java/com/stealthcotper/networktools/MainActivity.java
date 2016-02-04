@@ -1,8 +1,14 @@
 package com.stealthcotper.networktools;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -50,7 +56,12 @@ public class MainActivity extends AppCompatActivity {
       public void onClick(View v) {
         new Thread(new Runnable() {
           @Override public void run() {
+            try {
               doWakeOnLan();
+            }
+            catch (Exception e){
+              e.printStackTrace();
+            }
           }
         }).start();
       }
@@ -86,6 +97,11 @@ public class MainActivity extends AppCompatActivity {
   private void doPing() throws Exception{
     String ipAddress = editIpAddress.getText().toString();
 
+    if (TextUtils.isEmpty(ipAddress)){
+      appendResultsText("Invalid Ip Address");
+      return;
+    }
+
     // Perform a single synchronous ping
     PingResult pingResult = Ping.onAddress(ipAddress).setTimeOutMillis(1000).doPing();
 
@@ -108,13 +124,24 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
-  private void doWakeOnLan(){
+  private void doWakeOnLan() throws IllegalArgumentException{
     String ipAddress = editIpAddress.getText().toString();
+
+    if (TextUtils.isEmpty(ipAddress)){
+      appendResultsText("Invalid Ip Address");
+      return;
+    }
+
+    appendResultsText("IP address: "+ipAddress);
 
     // Get mac address from IP (using arp cache)
     String macAddress = ARPInfo.getMACFromIPAddress(ipAddress);
 
-    appendResultsText("IP address: "+ipAddress);
+    if (macAddress == null){
+      appendResultsText("Could not find MAC address, cannot send WOL packet without it.");
+      return;
+    }
+
     appendResultsText("MAC address: "+macAddress);
     appendResultsText("IP address2: "+ARPInfo.getIPAddressFromMAC(macAddress));
 
@@ -129,6 +156,11 @@ public class MainActivity extends AppCompatActivity {
 
   private void doPortScan() throws Exception{
     String ipAddress = editIpAddress.getText().toString();
+
+    if (TextUtils.isEmpty(ipAddress)){
+      appendResultsText("Invalid Ip Address");
+      return;
+    }
 
     appendResultsText("PortScanning IP: "+ipAddress);
     ArrayList<Integer> openPorts = PortScan.onAddress(ipAddress).setPort(21).doScan();
@@ -147,6 +179,26 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.menu_main, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getItemId()==R.id.action_github){
+      Intent i = new Intent(Intent.ACTION_VIEW);
+      i.setData(Uri.parse("https://github.com/stealthcopter/AndroidNetworkTools"));
+      startActivity(i);
+      return true;
+    }
+    else{
+      return super.onOptionsItemSelected(item);
+    }
   }
 
 }

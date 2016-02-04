@@ -133,5 +133,4 @@ public class Ping {
         return this;
     }
 
-
 }

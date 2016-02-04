@@ -1,8 +1,9 @@
 <resources>
-  <string name="app_name">Android Network Tools</string>
+  <string name="app_name">Network Tools Library</string>
   <string name="action_settings">Settings</string>
   <string name="hint_ip_address">IP Address or Hostname</string>
   <string name="ping">Ping</string>
   <string name="wol">Wake-On-Lan</string>
   <string name="port_scan">Port Scan</string>
+  <string name="github_page">Github</string>
 </resources>
