@@ -1,6 +1,9 @@
 # Andorid Network Tools ![image](./app/src/main/res/mipmap-xhdpi/ic_launcher.png)
+==================
 
-Collection of handy networking tools for android.
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidNetworkTools-green.svg?style=true)](https://android-arsenal.com/details/1/3112)
+
+Disapointed by the lack of good network apis in andorid / java I developed a collection of handy networking tools for everyday andorid development.
 
 * Ping
 * Port Scanning
