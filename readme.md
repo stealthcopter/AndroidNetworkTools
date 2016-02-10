@@ -1,5 +1,4 @@
 # Andorid Network Tools ![image](./app/src/main/res/mipmap-xhdpi/ic_launcher.png)
-==================
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidNetworkTools-green.svg?style=true)](https://android-arsenal.com/details/1/3112)
 
@@ -39,7 +38,7 @@ then add a library dependency. **Remember** to check for latest release [here](h
 
 ```groovy
     dependencies {
-        compile 'com.github.stealthcopter:AndroidNetworkTools:0.1'
+        compile 'com.github.stealthcopter:AndroidNetworkTools:0.1.1'
     }
 ```
 

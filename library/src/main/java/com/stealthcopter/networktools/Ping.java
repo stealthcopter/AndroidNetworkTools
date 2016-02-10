@@ -128,6 +128,10 @@ public class Ping {
                         e.printStackTrace();
                     }
                 }
+
+                if (pingListener!=null){
+                    pingListener.onFinished();
+                }
             }
         }).start();
         return this;
