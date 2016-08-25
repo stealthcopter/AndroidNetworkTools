@@ -34,7 +34,7 @@ public class ARPInfo {
 
         for(String line : getLinesInARPCache()) {
             String[] splitted = line.split(" +");
-            if (splitted != null && splitted.length >= 4 && ip.equals(splitted[0])) {
+            if (splitted.length >= 4 && ip.equals(splitted[0])) {
                 String mac = splitted[3];
                 if (mac.matches("..:..:..:..:..:..")) {
                     return mac;
@@ -55,12 +55,17 @@ public class ARPInfo {
      * @return the IP address found or null in format "192.168.0.1"
      */
     @Nullable public static String getIPAddressFromMAC(String macAddress) {
-        if (macAddress == null)
+        if (macAddress == null) {
             return null;
+        }
+
+        if (!macAddress.matches("..:..:..:..:..:..")){
+            throw new IllegalArgumentException("Invalid MAC Address");
+        }
 
         for(String line : getLinesInARPCache()) {
             String[] splitted = line.split(" +");
-            if (splitted != null && splitted.length >= 4 && macAddress.equals(splitted[3])) {
+            if (splitted.length >= 4 && macAddress.equals(splitted[3])) {
                 String ipAddress = splitted[0];
                 return ipAddress;
             }
@@ -73,13 +78,10 @@ public class ARPInfo {
      *
      * @return list of IP addresses found
      */
-    public ArrayList<String> getAllIPAddressesInARPCache(){
+    public static ArrayList<String> getAllIPAddressesInARPCache(){
         ArrayList<String> ipList = new ArrayList<>();
-        for(String line : getLinesInARPCache()) {
-            String[] splitted = line.split(" +");
-            if (splitted != null && splitted.length >= 4) {
-                ipList.add(splitted[0]);
-            }
+        for(Pair<String, String> ipMacPair : getAllIPAndMACAddressesInARPCache()) {
+            ipList.add(ipMacPair.first);
         }
         return ipList;
     }
@@ -89,13 +91,10 @@ public class ARPInfo {
      *
      * @return list of MAC addresses found
      */
-    public ArrayList<String> getAllMACAddressesInARPCache(){
+    public static ArrayList<String> getAllMACAddressesInARPCache(){
         ArrayList<String> macList = new ArrayList<>();
-        for(String line : getLinesInARPCache()) {
-            String[] splitted = line.split(" +");
-            if (splitted != null && splitted.length >= 4) {
-                macList.add(splitted[3]);
-            }
+        for(Pair<String, String> ipMacPair : getAllIPAndMACAddressesInARPCache()) {
+            macList.add(ipMacPair.first);
         }
         return macList;
     }
@@ -106,12 +105,15 @@ public class ARPInfo {
      *
      * @return list of IP/MAC address pairs found
      */
-    public ArrayList<Pair<String, String>> getAllIPAndMACAddressesInARPCache(){
+    public static ArrayList<Pair<String, String>> getAllIPAndMACAddressesInARPCache(){
         ArrayList<Pair<String, String>> macList = new ArrayList<>();
         for(String line : getLinesInARPCache()) {
             String[] splitted = line.split(" +");
-            if (splitted != null && splitted.length >= 4) {
-                macList.add(new Pair<>(splitted[0], splitted[3]));
+            if (splitted.length >= 4) {
+                // Ignore invalid MAC addresses as they have not been found
+                if (!splitted[3].equals("00:00:00:00:00:00")) {
+                    macList.add(new Pair<>(splitted[0], splitted[3]));
+                }
             }
         }
         return macList;
