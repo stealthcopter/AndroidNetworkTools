@@ -67,8 +67,7 @@ public class ARPInfo {
         for (String line : getLinesInARPCache()) {
             String[] splitted = line.split(" +");
             if (splitted.length >= 4 && macAddress.equals(splitted[3])) {
-                String ipAddress = splitted[0];
-                return ipAddress;
+                return splitted[0];
             }
         }
         return null;
@@ -95,7 +94,7 @@ public class ARPInfo {
     public static ArrayList<String> getAllMACAddressesInARPCache() {
         ArrayList<String> macList = new ArrayList<>();
         for (Pair<String, String> ipMacPair : getAllIPAndMACAddressesInARPCache()) {
-            macList.add(ipMacPair.first);
+            macList.add(ipMacPair.second);
         }
         return macList;
     }

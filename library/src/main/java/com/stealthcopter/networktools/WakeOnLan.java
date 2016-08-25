@@ -74,7 +74,7 @@ public class WakeOnLan {
          * @return - MAC formatted in bytes
          * @throws IllegalArgumentException
          */
-    private static byte[] getMacBytes(@NonNull  String macStr) throws IllegalArgumentException {
+    private static byte[] getMacBytes(@NonNull String macStr) throws IllegalArgumentException {
 
         if (macStr==null) throw new IllegalArgumentException("Mac Address cannot be null");
 
