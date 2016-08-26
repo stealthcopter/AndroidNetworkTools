@@ -2,6 +2,7 @@ package com.stealthcopter.networktools;
 
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -29,8 +30,9 @@ public class ARPInfo {
      */
     @Nullable
     public static String getMACFromIPAddress(String ip) {
-        if (ip == null)
+        if (ip == null) {
             return null;
+        }
 
         for (String line : getLinesInARPCache()) {
             String[] splitted = line.split(" +");
