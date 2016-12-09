@@ -8,8 +8,8 @@ android {
     applicationId "com.stealthcotper.networktools"
     minSdkVersion 14
     targetSdkVersion 24
-    versionCode 3
-    versionName "0.1.04"
+    versionCode 4
+    versionName "0.1.05"
   }
   buildTypes {
     release {
