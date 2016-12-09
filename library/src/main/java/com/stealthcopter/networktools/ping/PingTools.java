@@ -20,9 +20,13 @@ public class PingTools {
         try{
             PingResult result = PingTools.doNativePing(ia, timeOutMillis);
             return result;
+        } catch (InterruptedException e){
+            PingResult pingResult = new PingResult(ia);
+            pingResult.isReachable = false;
+            pingResult.error="Interrupted";
+            return pingResult;
         }
-        catch (Exception e){
-
+        catch (Exception ignored){
         }
 
         Log.v("AndroidNetworkTools", "Native ping failed, using java");
@@ -51,7 +55,7 @@ public class PingTools {
             if (!reached) pingResult.error="Timed Out";
         } catch (IOException e) {
             pingResult.isReachable=false;
-            pingResult.error="IOException";
+            pingResult.error="IOException: "+e.getMessage();
         }
         return pingResult;
     }
