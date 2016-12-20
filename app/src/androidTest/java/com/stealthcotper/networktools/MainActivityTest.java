@@ -51,6 +51,8 @@ public class MainActivityTest {
     @Test
     public void checkPing() {
 
+        Spoon.screenshot(mActivityRule.getActivity(), "ping");
+
         setUpText("google.com");
 
         // Click ping button
@@ -64,6 +66,8 @@ public class MainActivityTest {
     @Test
     public void checkWOL() {
 
+        Spoon.screenshot(mActivityRule.getActivity(), "wake-on-lan");
+
         setUpText("localhost");
 
         // Click ping button
@@ -76,6 +80,9 @@ public class MainActivityTest {
 
     @Test
     public void checkPortScan() {
+
+        Spoon.screenshot(mActivityRule.getActivity(), "port_scan");
+
         setUpText("localhost");
 
         // Click ping button
