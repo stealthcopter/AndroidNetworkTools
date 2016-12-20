@@ -4,3 +4,13 @@ machine:
 dependencies:
   pre:
     - echo y | android update sdk --no-ui --all --filter "tools,android-24,build-tools-24.0.0,platform-tools,extra-android-m2repository,extra-google-m2repository"
+
+test:
+  pre:
+  - ./gradlew assemble
+  post:
+  - mkdir -p $CIRCLE_TEST_REPORTS/junit
+  - mkdir -p $CIRCLE_TEST_REPORTS/apks/
+  - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+  - find . -type f -regex ".*/build/outputs/apk/.*apk" -exec cp {} $CIRCLE_TEST_REPORTS/apks/ \;
+  - cp -r app/build/reports $CIRCLE_TEST_REPORTS/reports
