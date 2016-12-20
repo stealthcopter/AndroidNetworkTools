@@ -15,7 +15,7 @@ test:
   
   override:
   # run tests  against the emulator.
-  - ./gradlew connectedAndroidTest
+  - ./gradlew spoon
   
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/tests
