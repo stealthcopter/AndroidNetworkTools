@@ -7,11 +7,11 @@ dependencies:
 
 test:
   pre:
-  - mksdcard -l sdcard 50M sdcard.img
-  - emulator -avd circleci-android22 -sdcard sdcard.img -noskin -noaudio -no-window -no-boot-anim -nojni -no-accel:
+  - mksdcard -l sdcard 150M sdcard.img
+  - emulator -avd circleci-android23 -sdcard sdcard.img -noaudio -no-window:
       background: true
       parallel: true
-  - ./gradlew assemble -PdisablePreDex
+  # - ./gradlew assemble -PdisablePreDex
   - circle-android wait-for-boot
   
   override:
