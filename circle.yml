@@ -7,11 +7,12 @@ dependencies:
 
 test:
   pre:
-  - emulator -avd circleci-android22 -no-audio -no-window:
+  - mksdcard -l sdcard 50M sdcard.img
+  - emulator -avd circleci-android22 -sdcard sdcard.img -noskin -noaudio -no-window -no-boot-anim -nojni -no-accel:
       background: true
       parallel: true
+  - ./gradlew assemble -PdisablePreDex
   - circle-android wait-for-boot
-  - ./gradlew assemble
   
   override:
   # run tests  against the emulator.
