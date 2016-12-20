@@ -7,10 +7,18 @@ dependencies:
 
 test:
   pre:
+  - emulator -avd circleci-android22 -no-audio -no-window:
+    background: true
+    parallel: true
+  - circle-android wait-for-boot
   - ./gradlew assemble
+  
+  override:
+  # run tests  against the emulator.
+  - ./gradlew connectedAndroidTest
+  
   post:
-  - mkdir -p $CIRCLE_TEST_REPORTS/junit
+  - mkdir -p $CIRCLE_TEST_REPORTS/tests
   - mkdir -p $CIRCLE_TEST_REPORTS/apks/
-  - find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
   - find . -type f -regex ".*/build/outputs/apk/.*apk" -exec cp {} $CIRCLE_TEST_REPORTS/apks/ \;
-  - cp -r app/build/reports $CIRCLE_TEST_REPORTS/reports
+  - cp -r app/build/spoon $CIRCLE_TEST_REPORTS/tests

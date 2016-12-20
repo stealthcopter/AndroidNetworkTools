@@ -7,9 +7,9 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/library" />
+            <option value="$USER_HOME$/workspace/AndroidNetworkTools" />
+            <option value="$USER_HOME$/workspace/AndroidNetworkTools/app" />
+            <option value="$USER_HOME$/workspace/AndroidNetworkTools/library" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

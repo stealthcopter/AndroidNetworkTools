@@ -53,6 +53,14 @@ public class MainActivityTest {
 
         // Click ping button
         onView(withId(R.id.pingButton)).perform(click());
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Spoon.screenshot(mActivityRule.getActivity(), "ping");
     }
 
     @Test
@@ -69,6 +77,14 @@ public class MainActivityTest {
 
         // Click ping button
         onView(withId(R.id.wolButton)).perform(click());
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Spoon.screenshot(mActivityRule.getActivity(), "wake-on-lan");
     }
 
     @Test
@@ -84,7 +100,13 @@ public class MainActivityTest {
         onView(withId(R.id.editIpAddress)).check(matches(withText(hostName)));
 
         // Click ping button
-        onView(withId(R.id.wolButton)).perform(click());
+        onView(withId(R.id.portScanButton)).perform(click());
+
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         Spoon.screenshot(mActivityRule.getActivity(), "port_scan");
     }

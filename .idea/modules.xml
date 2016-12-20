@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AndroidNetworkTools.iml" filepath="$PROJECT_DIR$/AndroidNetworkTools.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$USER_HOME$/workspace/AndroidNetworkTools/AndroidNetworkTools.iml" filepath="$USER_HOME$/workspace/AndroidNetworkTools/AndroidNetworkTools.iml" />
+      <module fileurl="file://$USER_HOME$/workspace/AndroidNetworkTools/app/app.iml" filepath="$USER_HOME$/workspace/AndroidNetworkTools/app/app.iml" />
+      <module fileurl="file://$USER_HOME$/workspace/AndroidNetworkTools/library/library.iml" filepath="$USER_HOME$/workspace/AndroidNetworkTools/library/library.iml" />
     </modules>
   </component>
 </project>
