@@ -38,7 +38,7 @@ android {
 
 }
 
-// This section is optional
+// Spoon used for CI / Testing
 spoon {
   debug = true
   // To grant permissions to Android M >= devices */

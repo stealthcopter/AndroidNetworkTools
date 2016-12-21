@@ -16,7 +16,7 @@ test:
   
   override:
   # run tests  against the emulator.
-  - ./gradlew spoonCi -PdisablePreDex
+  - ./gradlew spoonCi
   
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/tests
