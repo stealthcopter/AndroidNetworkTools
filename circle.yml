@@ -16,10 +16,10 @@ test:
   
   override:
   # run tests  against the emulator.
-  - ./gradlew spoonCi
+  - ./gradlew spoonCi -PdisablePreDex
   
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/tests
-  - mkdir -p $CIRCLE_TEST_REPORTS/apks/
-  - find . -type f -regex ".*/build/outputs/apk/.*apk" -exec cp {} $CIRCLE_TEST_REPORTS/apks/ \;
+  - mkdir -p $CIRCLE_ARTIFACTS/apks/
+  - find . -type f -regex ".*/build/outputs/apk/.*apk" -exec cp {} $CIRCLE_ARTIFACTS/apks/ \;
   - cp -r app/build/spoon $CIRCLE_TEST_REPORTS/tests
