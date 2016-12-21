@@ -11,12 +11,12 @@ test:
   - emulator -avd circleci-android23 -sdcard sdcard.img -noaudio -no-window:
       background: true
       parallel: true
-  # - ./gradlew assemble -PdisablePreDex
+  - ./gradlew assemble
   - circle-android wait-for-boot
   
   override:
   # run tests  against the emulator.
-  - ./gradlew spoon
+  - ./gradlew spoonCi
   
   post:
   - mkdir -p $CIRCLE_TEST_REPORTS/tests

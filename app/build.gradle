@@ -29,6 +29,13 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+
+  productFlavors {
+    regular {  }
+    // Add a CI only flavor that has extra permissions needed for CI to perform
+    ci {  }
+  }
+
 }
 
 // This section is optional
