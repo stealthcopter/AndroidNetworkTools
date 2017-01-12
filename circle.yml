@@ -9,10 +9,12 @@ test:
   pre:
   # - ./gradlew assembleRegularRelease
   - mksdcard -l sdcard 150M sdcard.img
-  - emulator -avd circleci-android23 -sdcard sdcard.img -noaudio -no-window:
+  - emulator -avd circleci-android22 -sdcard sdcard.img -noaudio -no-window:
       background: true
       parallel: true
   - circle-android wait-for-boot
+  # Extra bit of sleep as we don't really trust the emulator is quite ready
+  - sleep 30
   
   override:
   # run tests  against the emulator.

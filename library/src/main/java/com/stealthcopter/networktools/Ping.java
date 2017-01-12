@@ -3,6 +3,7 @@ package com.stealthcopter.networktools;
 import android.support.annotation.NonNull;
 
 import com.stealthcopter.networktools.ping.PingResult;
+import com.stealthcopter.networktools.ping.PingStats;
 import com.stealthcopter.networktools.ping.PingTools;
 
 import java.net.InetAddress;
@@ -15,7 +16,7 @@ public class Ping {
 
     public interface PingListener{
         void onResult(PingResult pingResult);
-        void onFinished();
+        void onFinished(PingStats pingStats);
     }
 
     private InetAddress address;
@@ -107,18 +108,41 @@ public class Ping {
      * @return - this so we can cancel if needed
      */
     public Ping doPing(final PingListener pingListener){
+
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                long pingsCompleted = 0;
+                long noLostPackets = 0;
+                float totalPingTime = 0;
+                float minPingTime = -1;
+                float maxPingTime = -1;
+
                 cancelled = false;
                 int noPings = times;
 
                 // times == 0 is the case that we can continuous scanning
                 while(noPings>0 || times == 0){
                     PingResult pingResult = PingTools.doPing(address, timeOutMillis);
+
                     if (pingListener!=null){
                         pingListener.onResult(pingResult);
                     }
+
+                    // Update ping stats
+                    pingsCompleted++;
+
+                    if (pingResult.hasError()){
+                        noLostPackets++;
+                    }
+                    else{
+                        float timeTaken = pingResult.getTimeTaken();
+                        totalPingTime += timeTaken;
+                        if (maxPingTime == - 1 || timeTaken > maxPingTime) maxPingTime = timeTaken;
+                        if (minPingTime == - 1 || timeTaken < minPingTime) minPingTime = timeTaken;
+                    }
+
                     noPings--;
                     if (cancelled) break;
 
@@ -130,7 +154,7 @@ public class Ping {
                 }
 
                 if (pingListener!=null){
-                    pingListener.onFinished();
+                    pingListener.onFinished(new PingStats(address, pingsCompleted, noLostPackets, totalPingTime, minPingTime, maxPingTime));
                 }
             }
         }).start();

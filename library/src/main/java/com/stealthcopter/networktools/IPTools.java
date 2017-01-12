@@ -7,19 +7,19 @@ import java.util.regex.Pattern;
  */
 public class IPTools {
 
-    public void findDevicesOnSubnet(){
-        // TODO: provide Ip address
-
-        // TODO: Cheat by looking at ARP Cache for a headstart.
-
-        // TODO: Ping devices on network
-
-        // TODO Results.
-    }
-
-    public void getLocalIpAddress(){
-
-    }
+//    public void findDevicesOnSubnet(){
+//        // TODO: provide Ip address
+//
+//        // TODO: Cheat by looking at ARP Cache for a headstart.
+//
+//        // TODO: Ping devices on network
+//
+//        // TODO Results.
+//    }
+//
+//    public void getLocalIpAddress(){
+//
+//    }
 
 
     /**
