@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_github) {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(getString(R.string.github_page)));
+            i.setData(Uri.parse(getString(R.string.github_url)));
             startActivity(i);
             return true;
         } else {
