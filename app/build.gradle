@@ -13,15 +13,15 @@ apply plugin: 'com.android.application'
 apply plugin: 'spoon'
 
 android {
-  compileSdkVersion 24
-  buildToolsVersion "24.0.0"
+  compileSdkVersion compileSdkVer
+  buildToolsVersion buildToolsVer
 
   defaultConfig {
     applicationId "com.stealthcotper.networktools"
-    minSdkVersion 14
-    targetSdkVersion 24
-    versionCode 5
-    versionName "0.1.06"
+    minSdkVersion minSdkVer
+    targetSdkVersion targetSdkVer
+    versionCode 6
+    versionName "0.1.08"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
@@ -48,8 +48,8 @@ spoon {
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile 'com.android.support:appcompat-v7:24.2.0'
-  compile 'com.android.support:design:24.2.0'
+  compile "com.android.support:appcompat-v7:$supportLibVer"
+  compile "com.android.support:design:$supportLibVer"
   compile project(':library')
 
   testCompile 'junit:junit:4.12'
