@@ -4,3 +4,24 @@ machine:
 dependencies:
   pre:
     - echo y | android update sdk --no-ui --all --filter "tools,android-24,build-tools-24.0.0,platform-tools,extra-android-m2repository,extra-google-m2repository"
+
+test:
+  pre:
+  # - ./gradlew assembleRegularRelease
+  - mksdcard -l sdcard 150M sdcard.img
+  - emulator -avd circleci-android22 -sdcard sdcard.img -noaudio -no-window:
+      background: true
+      parallel: true
+  - circle-android wait-for-boot
+  # Extra bit of sleep as we don't really trust the emulator is quite ready
+  - sleep 30
+  
+  override:
+  # run tests  against the emulator.
+  - ./gradlew spoonCi
+  
+  post:
+  - mkdir -p $CIRCLE_TEST_REPORTS/tests
+  - mkdir -p $CIRCLE_ARTIFACTS/apks/
+  - find . -type f -regex ".*/build/outputs/apk/.*apk" -exec cp {} $CIRCLE_ARTIFACTS/apks/ \;
+  - cp -r app/build/spoon $CIRCLE_TEST_REPORTS/tests

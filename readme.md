@@ -1,6 +1,10 @@
 # Android Network Tools ![image](./app/src/main/res/mipmap-xhdpi/ic_launcher.png)
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidNetworkTools-green.svg?style=true)](https://android-arsenal.com/details/1/3112)
+[![circlci](https://circleci.com/gh/:stealthcopter/:AndroidNetworkTools.png?style=shield&circle-token=:e46ddda1fe795e278fe838cf59d103d4a694c277)]
+
+
+https://circleci.com/gh/stealthcopter/AndroidNetworkTools.png?style=shield&circle-token=:e46ddda1fe795e278fe838cf59d103d4a694c277
 
 Disapointed by the lack of good network apis in android / java I developed a collection of handy networking tools for everyday android development.
 
@@ -38,7 +42,7 @@ then add a library dependency. **Remember** to check for latest release [here](h
 
 ```groovy
     dependencies {
-        compile 'com.github.stealthcopter:AndroidNetworkTools:0.1.2'
+        compile 'com.github.stealthcopter:AndroidNetworkTools:0.2.0'
     }
 ```
 
@@ -50,7 +54,7 @@ Requires internet permission (obviously...)
 
 ### Ping
 
-Uses the native ping binary if avaliable on the device (some devices come without it) and falls back to a TCP request on port 7 (echo request) if not.
+Uses the native ping binary if available on the device (some devices come without it) and falls back to a TCP request on port 7 (echo request) if not.
 
 ```java
      // Synchronously 
@@ -65,7 +69,7 @@ Uses the native ping binary if avaliable on the device (some devices come withou
     });
 ```
 
-Note: If we do have to fall back to using TCP port 7 (the java way) to detect devices we will find significantly less than with the native ping binary. If this is an issue you could consider adding a ping binary to your application or device so that it is always avaliable.
+Note: If we do have to fall back to using TCP port 7 (the java way) to detect devices we will find significantly less than with the native ping binary. If this is an issue you could consider adding a ping binary to your application or device so that it is always available.
 
 ### Port Scanning
 
