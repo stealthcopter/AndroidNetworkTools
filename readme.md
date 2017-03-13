@@ -42,7 +42,7 @@ then add a library dependency. **Remember** to check for latest release [here](h
 
 ```groovy
     dependencies {
-        compile 'com.github.stealthcopter:AndroidNetworkTools:0.2.0'
+        compile 'com.github.stealthcopter:AndroidNetworkTools:0.2.1'
     }
 ```
 
