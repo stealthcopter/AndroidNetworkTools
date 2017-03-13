@@ -24,8 +24,25 @@ android {
     versionName "0.1.08"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
+
+  //check if the keystore details are defined in gradle.properties (this is so the key is not in github)
+  if (project.hasProperty("ANDROID_NETWORK_TOOLS_STORE")) {
+    signingConfigs {
+      //from ~/.gradle/gradle.properties
+      release {
+        storeFile file(ANDROID_NETWORK_TOOLS_STORE)
+        keyAlias ANDROID_NETWORK_TOOLS_ALIAS
+        storePassword ANDROID_NETWORK_TOOLS_PASS
+        keyPassword ANDROID_NETWORK_TOOLS_KEY_PASS
+      }
+    }
+  }
+
   buildTypes {
     release {
+      if (project.hasProperty("ANDROID_NETWORK_TOOLS_STORE")) {
+        signingConfig signingConfigs.release
+      }
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }

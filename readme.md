@@ -42,7 +42,7 @@ then add a library dependency. **Remember** to check for latest release [here](h
 
 ```groovy
     dependencies {
-        compile 'com.github.stealthcopter:AndroidNetworkTools:0.1.2'
+        compile 'com.github.stealthcopter:AndroidNetworkTools:0.2.0'
     }
 ```
 
@@ -54,7 +54,7 @@ Requires internet permission (obviously...)
 
 ### Ping
 
-Uses the native ping binary if avaliable on the device (some devices come without it) and falls back to a TCP request on port 7 (echo request) if not.
+Uses the native ping binary if available on the device (some devices come without it) and falls back to a TCP request on port 7 (echo request) if not.
 
 ```java
      // Synchronously 
@@ -69,7 +69,7 @@ Uses the native ping binary if avaliable on the device (some devices come withou
     });
 ```
 
-Note: If we do have to fall back to using TCP port 7 (the java way) to detect devices we will find significantly less than with the native ping binary. If this is an issue you could consider adding a ping binary to your application or device so that it is always avaliable.
+Note: If we do have to fall back to using TCP port 7 (the java way) to detect devices we will find significantly less than with the native ping binary. If this is an issue you could consider adding a ping binary to your application or device so that it is always available.
 
 ### Port Scanning
 
