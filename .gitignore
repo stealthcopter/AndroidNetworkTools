@@ -1,4 +1,6 @@
 *.iml
+.idea
+.directory
 .gradle
 /local.properties
 /.idea/workspace.xml
