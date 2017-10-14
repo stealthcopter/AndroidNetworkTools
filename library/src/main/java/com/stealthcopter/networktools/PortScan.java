@@ -27,7 +27,9 @@ public class PortScan {
      * Set the address to ping
      * @param address - Address to be pinged
      * @return this object to allow chaining
-     * @throws UnknownHostException
+     * @throws UnknownHostException - if no IP address for the
+     *               <code>host</code> could be found, or if a scope_id was specified
+     *               for a global IPv6 address.
      */
     public static PortScan onAddress(@NonNull String address) throws UnknownHostException {
         PortScan portScan = new PortScan();
@@ -65,8 +67,7 @@ public class PortScan {
      */
     public PortScan setPort(int port){
         ports.clear();
-        if (port<1) throw new IllegalArgumentException("Port cannot be less than 1");
-        else if (port>65535) throw new IllegalArgumentException("Port cannot be greater than 65535");
+        validatePort(port);
         ports.add(port);
         return this;
     }
@@ -77,8 +78,12 @@ public class PortScan {
      * @return this object to allow chaining
      */
     public PortScan setPorts(ArrayList<Integer> ports){
-        ports.clear();
-        // TODO: Validate / sanitize
+
+        // Check all ports are valid
+        for(Integer port : ports){
+            validatePort(port);
+        }
+
         this.ports = ports;
 
         return this;
@@ -106,9 +111,8 @@ public class PortScan {
             if (x.contains("-")){
                 int start = Integer.parseInt(x.split("-")[0]);
                 int end = Integer.parseInt(x.split("-")[1]);
-                if (start<1) throw new IllegalArgumentException("Start port cannot be less than 1");
-                if (start>65535) throw new IllegalArgumentException("Start cannot be greater than 65535");
-                if (end>65535) throw new IllegalArgumentException("Start cannot be greater than 65535");
+                validatePort(start);
+                validatePort(end);
                 if (end<=start) throw new IllegalArgumentException("Start port cannot be greater than or equal to the end port");
 
                 for (int j=start; j<=end;j++){
@@ -117,8 +121,7 @@ public class PortScan {
             }
             else{
                 int start = Integer.parseInt(x);
-                if (start<1) throw new IllegalArgumentException("Start port cannot be less than 1");
-                if (start>65535) throw new IllegalArgumentException("Start cannot be greater than 65535");
+                validatePort(start);
                 ports.add(start);
             }
         }
@@ -126,6 +129,15 @@ public class PortScan {
         this.ports = ports;
 
         return this;
+    }
+
+    /**
+     * Checks and throws exception if port is not valid
+     * @param port - the port to validate
+     */
+    private void validatePort(int port){
+        if (port<1) throw new IllegalArgumentException("Start port cannot be less than 1");
+        if (port>65535) throw new IllegalArgumentException("Start cannot be greater than 65535");
     }
 
     /**
@@ -146,7 +158,7 @@ public class PortScan {
      */
     public PortScan setPortsAll(){
         ports.clear();
-        for (int i = 1; i < 65535; i++) {
+        for (int i = 1; i < 65536; i++) {
             ports.add(i);
         }
         return this;
