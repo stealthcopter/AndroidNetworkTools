@@ -11,8 +11,13 @@ function create_github_release {
 
     version=`cat $1/build.gradle | grep -m 1 versionName | cut -d'"' -f 2`
     
-    curl -v -i -X POST -H "Content-Type:application/json" -H "Authorization: token $GITHUB_RELEASE_TOKEN" -d '{"tag_name": "'$version'","name": "'$version'","body": "'"$GITHUB_RELEASE_DESC"'","draft": true}' $GITHUB_RELEASE_URL
+    response=`curl -v -i -X POST -H "Content-Type:application/json" -H "Authorization: token $GITHUB_RELEASE_TOKEN" -d '{"tag_name": "'$version'","name": "'$version'","body": "'"$GITHUB_RELEASE_DESC"'","draft": true}' $GITHUB_RELEASE_URL`
+    
+    id=`echo $response | python -c "import json,sys;obj=json.load(sys.stdin);print obj['id'];"`
+    
+    curl -H "Content-Type:application/zip" -H "Authorization: token $GITHUB_RELEASE_TOKEN" --data-binary @"/app/build/outputs/apk/app-regular-release.apk" https://api.github.com/repos/stealthcopter/AndroidNetworkTools/releases/$id/assets?name=AndroidNetworkTools.apk
 
+    return
 }
 
 # Only deploy releases if we are on the master branch
