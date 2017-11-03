@@ -19,9 +19,13 @@ function create_github_release {
     
     id=`echo $response | python -c "import json,sys;obj=json.load(sys.stdin);print obj['id'];"`
     
+    if [ -z "$id" ]; then
+        return 1
+    fi
+    
     echo "Found id $id"
     
-    curl -H "Content-Type:application/zip" -H "Authorization: token $GITHUB_RELEASE_TOKEN" --data-binary @"$GITHUB_RELEASE_FILE_PATH" $GITHUB_UPLOAD_URL$id/assets?name=$GITHUB_RELASE_FILENAME
+    curl -v -H "Content-Type:application/zip" -H "Authorization: token $GITHUB_RELEASE_TOKEN" --data-binary @"$GITHUB_RELEASE_FILE_PATH" $GITHUB_UPLOAD_URL$id/assets?name=$GITHUB_RELASE_FILENAME
 
     return
 }

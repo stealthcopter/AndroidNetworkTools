@@ -15,7 +15,7 @@ GITHUB_RELEASE_URL="https://api.github.com/repos/stealthcopter/AndroidNetworkToo
 GITHUB_RELEASE_TOKEN=$ANDROID_NETWORK_TOOLS_GITHUB_RELEASE_TOKEN
 GITHUB_RELEASE_FILE_PATH="app/build/outputs/apk/app-regular-release.apk"
 GITHUB_RELASE_FILENAME="AndroidNetworkTools.apk"
-$GITHUB_UPLOAD_URL="https://uploads.github.com/repos/stealthcopter/AndroidNetworkTools/releases/"
+GITHUB_UPLOAD_URL="https://uploads.github.com/repos/stealthcopter/AndroidNetworkTools/releases/"
 
 # Git info
 GIT_TAG=`git name-rev --name-only --tags HEAD`
