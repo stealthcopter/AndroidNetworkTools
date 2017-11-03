@@ -11,7 +11,7 @@ function create_github_release {
 
     version=`cat $1/build.gradle | grep -m 1 versionName | cut -d'"' -f 2`
     
-    curl -v -i -X POST -H "Content-Type:application/json" -H "Authorization: token $GITHUB_RELEASE_TOKEN" -d '{"tag_name": "'$version'","name": "'$version'","body": '$GITHUB_RELEASE_DESC',"draft": true}' $GITHUB_RELEASE_URL
+    curl -v -i -X POST -H "Content-Type:application/json" -H "Authorization: token $GITHUB_RELEASE_TOKEN" -d '{"tag_name": "'$version'","name": "'$version'","body": "'"$GITHUB_RELEASE_DESC"'","draft": true}' $GITHUB_RELEASE_URL
 
 }
 
