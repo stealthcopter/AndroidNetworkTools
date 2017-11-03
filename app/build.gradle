@@ -6,11 +6,21 @@ buildscript {
 
   dependencies {
     classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
+
+    // This is so we can publish straight to Google Play
+    classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
   }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'spoon'
+apply plugin: 'com.github.triplet.play'
+
+play {
+  track = 'alpha'
+  serviceAccountEmail = 'androidnetworktoolspublisher@api-6650335122940819061-609121.iam.gserviceaccount.com'
+  pk12File = file('../key.p12')
+}
 
 android {
   compileSdkVersion compileSdkVer
@@ -20,8 +30,8 @@ android {
     applicationId "com.stealthcotper.networktools"
     minSdkVersion minSdkVer
     targetSdkVersion targetSdkVer
-    versionCode 7
-    versionName "0.1.10"
+    versionCode 8
+    versionName "0.1.12"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
