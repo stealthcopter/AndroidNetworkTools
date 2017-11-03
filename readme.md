@@ -3,7 +3,7 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidNetworkTools-green.svg?style=true)](https://android-arsenal.com/details/1/3112)
 [![CircleCI](https://circleci.com/gh/stealthcopter/AndroidNetworkTools.svg?style=svg)](https://circleci.com/gh/stealthcopter/AndroidNetworkTools)
 
-Disapointed by the lack of good network apis in android / java I developed a collection of handy networking tools for everyday android development.
+Disappointed by the lack of good network apis in android / java I developed a collection of handy networking tools for everyday android development.
 
 * Ping
 * Port Scanning

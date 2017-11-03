@@ -20,6 +20,10 @@ public class WakeOnLan {
     public static final int DEFAULT_TIMEOUT_MILLIS = 10000;
     public static final int DEFAULT_NO_PACKETS = 5;
 
+    // This class is not to be instantiated
+    private WakeOnLan() {
+    }
+
     /**
      * Send a Wake-On-Lan packet to port 9 using default timeout of 10s
      * @param ipStr - IP String to send to

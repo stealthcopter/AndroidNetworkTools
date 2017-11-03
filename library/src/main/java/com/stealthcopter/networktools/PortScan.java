@@ -13,6 +13,10 @@ import java.util.ArrayList;
  */
 public class PortScan {
 
+    // This class is not to be instantiated
+    private PortScan() {
+    }
+
     public interface PortListener{
         void onResult(int portNo, boolean open);
         void onFinished(ArrayList<Integer> openPorts);

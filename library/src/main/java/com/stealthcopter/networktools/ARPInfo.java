@@ -21,6 +21,11 @@ import java.util.ArrayList;
  */
 public class ARPInfo {
 
+    // This class is not to be instantiated
+    private ARPInfo() {
+    }
+
+
     /**
      * Try to extract a hardware MAC address from a given IP address using the
      * ARP cache (/proc/net/arp).

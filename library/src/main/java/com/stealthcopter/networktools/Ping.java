@@ -14,6 +14,10 @@ import java.net.UnknownHostException;
  */
 public class Ping {
 
+    // This class is not to be instantiated
+    private Ping() {
+    }
+
     public interface PingListener{
         void onResult(PingResult pingResult);
         void onFinished(PingStats pingStats);

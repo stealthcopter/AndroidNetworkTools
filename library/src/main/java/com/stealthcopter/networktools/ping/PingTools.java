@@ -10,16 +10,23 @@ import java.net.InetAddress;
  */
 public class PingTools {
 
+    // This class is not to be instantiated
+    private PingTools() {
+    }
+
+
     /**
-     * This will perform a ping using the native ping tool and fall back to using a java style
-     * request on failure.
+     * Perform a ping using the native ping tool and fall back to using java echo request
+     * on failure.
+     * @param ia - address to ping
+     * @param timeOutMillis - timeout in millisecdonds
+     * @return - the ping results
      */
     public static PingResult doPing(InetAddress ia, int timeOutMillis){
 
         // Try native ping first
         try{
-            PingResult result = PingTools.doNativePing(ia, timeOutMillis);
-            return result;
+            return PingTools.doNativePing(ia, timeOutMillis);
         } catch (InterruptedException e){
             PingResult pingResult = new PingResult(ia);
             pingResult.isReachable = false;
@@ -36,6 +43,14 @@ public class PingTools {
     }
 
 
+    /**
+     * Perform a ping using the native ping binary
+     * @param ia - address to ping
+     * @param timeOutMillis - timeout in millisecdonds
+     * @return - the ping results
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static PingResult doNativePing(InetAddress ia, int timeOutMillis) throws IOException, InterruptedException {
         return PingNative.ping(ia, timeOutMillis);
     }
@@ -44,6 +59,10 @@ public class PingTools {
      * Tries to reach this {@code InetAddress}. This method first tries to use
      * ICMP <i>(ICMP ECHO REQUEST)</i>, falling back to a TCP connection
      * on port 7 (Echo) of the remote host.
+     *
+     * @param ia - address to ping
+     * @param timeOutMillis - timeout in millisecdonds
+     * @return - the ping results
      */
     public static PingResult doJavaPing(InetAddress ia, int timeOutMillis){
         PingResult pingResult = new PingResult(ia);
