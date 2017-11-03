@@ -5,16 +5,16 @@ DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 . "$DIR/config.sh"
 
-
+APP_RELEASE_NAME="Android Network Tools Sample App"
 
 # Uploads a build to Beta
 function upload_to_beta {
     echo "Uploading $1 to Beta"
     
     if ./gradlew :$1:crashlyticsUploadDistributionRelease ; then
-        webhook "${1}" "Uploading to Beta Succeeded"
+        webhook $1 $APP_RELEASE_NAME "Uploading to Beta Succeeded"
     else
-        webhook "${1}" "Uploading to Beta Play FAILED :("
+        webhook $1 $APP_RELEASE_NAME "Uploading to Beta Play FAILED :("
     fi
 }
 
@@ -23,9 +23,9 @@ function upload_to_google_play {
     echo "Uploading $1 to Google Play"
     
     if ./gradlew :$1:publishApkRegularRelease ; then
-        webhook "${1}" "Uploading to Google Play Succeeded"
+        webhook $1 $APP_RELEASE_NAME "Uploading to Google Play Succeeded"
     else
-        webhook "${1}" "Uploading to Google Play FAILED :("
+        webhook $1 $APP_RELEASE_NAME "Uploading to Google Play FAILED :("
     fi
 }
 
