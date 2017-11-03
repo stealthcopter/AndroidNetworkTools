@@ -11,7 +11,7 @@ function webhook {
     
     # TESTING WEBHOOK https://hooks.slack.com/services/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
     
-    app_name="Sample App"
+    app_name="Android Network Tools Sample App"
     icon_url="https://github.com/stealthcopter/AndroidNetworkTools/raw/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
     
     echo $message
@@ -53,9 +53,6 @@ GIT_CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 #     exit 0
 # fi
 
-
-# UNCOMMENT TO TEST
-GIT_COMMIT_DESC="#DEPLOY"
 
 # Print the git commit message
 echo "Git commit message: ${GIT_COMMIT_DESC}"

@@ -41,7 +41,7 @@ jobs:
       # Compile release apks
       - run:
           name: Compile APKs
-          command: ./gradlew assembleRelease
+          command: ./gradlew assembleRegularRelease
 
 
       # Copy APK files to artifacts
@@ -62,5 +62,5 @@ jobs:
       # Upload to beta if requested and then publish webhooks
       - run:
           name: Publish to Google Play
-          command: scripts/webhooks.sh
+          command: scripts/upload-apks.sh
 

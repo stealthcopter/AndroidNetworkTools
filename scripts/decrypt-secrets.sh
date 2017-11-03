@@ -6,6 +6,8 @@
 ls -al .circleci/
 echo $ANDROID_NETWORK_TOOLS_DECRYPTKEY1
 
+# Encrypted using openssl 1.1.0g
+
 # Encrypt
 #openssl aes-256-cbc -e -in key.p12 -out .circleci/key.p12.enc -k $ANDROID_NETWORK_TOOLS_DECRYPTKEY1
 
