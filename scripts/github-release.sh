@@ -21,11 +21,15 @@ function create_github_release {
 #     exit 0
 # fi
 
-if [[ $GIT_COMMIT_DESC == *"#RELEASE"* ]]; then
-    echo "Creating github release"
+# This will push a github release every time a new tag is pushed
+# you should ensure tags are push with commits by doing the following:
+# git config --global push.followTags true
+
+if [[ $GIT_COMMIT_DESC != *"undefined"* ]]; then
+    echo "Creating github release for tag $GIT_TAG"
     if create_github_release $GITHUB_RELEASE_MODULE; then
-        webhook $GITHUB_RELEASE_MODULE "Created github release"
+        webhook $GITHUB_RELEASE_MODULE "Created github release for tag $TAG"
     else
-        webhook $GITHUB_RELEASE_MODULE "Failed to create github release :("
+        webhook $GITHUB_RELEASE_MODULE "Failed to create github release for tag $TAG :("
     fi
 fi
