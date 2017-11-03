@@ -14,13 +14,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.stealthcopter.networktools.ARPInfo;
+import com.stealthcopter.networktools.IPTools;
 import com.stealthcopter.networktools.Ping;
 import com.stealthcopter.networktools.PortScan;
+import com.stealthcopter.networktools.SubnetDevices;
 import com.stealthcopter.networktools.WakeOnLan;
 import com.stealthcopter.networktools.ping.PingResult;
 import com.stealthcopter.networktools.ping.PingStats;
+import com.stealthcopter.networktools.subnet.SubnetInfo;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         resultText = (TextView) findViewById(R.id.resultText);
         editIpAddress = (EditText) findViewById(R.id.editIpAddress);
+
+        InetAddress ipAddress = IPTools.getLocalIPv4Address();
+        if (ipAddress != null){
+            editIpAddress.setText(ipAddress.toString());
+        }
 
         findViewById(R.id.pingButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +95,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+        findViewById(R.id.subnetDevicesButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            findSubnetDevices();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
 
+    }
 
     private void appendResultsText(final String text) {
         runOnUiThread(new Runnable() {
@@ -146,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         String macAddress = ARPInfo.getMACFromIPAddress(ipAddress);
 
         if (macAddress == null) {
-            appendResultsText("Could not find MAC address, cannot send WOL packet without it.");
+            appendResultsText("Could not fromIPAddress MAC address, cannot send WOL packet without it.");
             return;
         }
 
@@ -187,8 +211,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    private void findSubnetDevices() {
+
+        final long startTimeMillis = System.currentTimeMillis();
+
+        String partialIpAddress = editIpAddress.getText().toString();
+
+        SubnetDevices.fromLocalAddress().findDevices(new SubnetDevices.OnSubnetDeviceFound() {
+            @Override
+            public void onDeviceFound(SubnetInfo subnetInfo) {
+                appendResultsText("Device: " + subnetInfo.ip+" "+subnetInfo.hostname);
+            }
+
+            @Override
+            public void onFinished(ArrayList<SubnetInfo> devicesFound) {
+                float timeTaken =  (System.currentTimeMillis() - startTimeMillis)/1000.0f;
+                appendResultsText("Finished "+timeTaken+" s");
+            }
+        });
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

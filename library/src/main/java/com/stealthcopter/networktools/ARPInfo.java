@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by mat on 09/12/15.
  * <p/>
- * Looks at the file at /proc/net/arp to find ip/mac addresses from the cache
+ * Looks at the file at /proc/net/arp to fromIPAddress ip/mac addresses from the cache
  * We assume that the file has this structure:
  * <p/>
  * IP address       HW type     Flags       HW address            Mask     Device

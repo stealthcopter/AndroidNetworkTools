@@ -36,8 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_ip_address"
-                android:inputType="textNoSuggestions"
-                android:text="192.168.0.1"/>
+                android:inputType="textNoSuggestions"/>
         </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
@@ -47,23 +46,40 @@
 
             <Button
                 android:id="@+id/pingButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/ping"
                 />
 
             <Button
                 android:id="@+id/wolButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/wol"
                 />
             <Button
                 android:id="@+id/portScanButton"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/port_scan"
                 />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/subnetDevicesButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subnet"
+                />
+
         </LinearLayout>
 
     </LinearLayout>

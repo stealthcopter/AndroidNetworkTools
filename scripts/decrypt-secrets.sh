@@ -3,9 +3,6 @@
 # Following this guide to encrypt / decrypt files
 # https://github.com/circleci/encrypted-files
 
-ls -al .circleci/
-echo $ANDROID_NETWORK_TOOLS_DECRYPTKEY1
-
 # Encrypted using openssl 1.1.0g
 
 # Encrypt

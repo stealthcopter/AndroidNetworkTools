@@ -1,5 +1,13 @@
 package com.stealthcopter.networktools;
 
+import android.support.annotation.Nullable;
+
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.regex.Pattern;
 
 /**
@@ -30,20 +38,57 @@ public class IPTools {
             Pattern.compile(
                     "^((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)::((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)$");
 
-    public static boolean isIPv4Address(final String input) {
-        return IPV4_PATTERN.matcher(input).matches();
+    public static boolean isIPv4Address(final String address) {
+        return IPV4_PATTERN.matcher(address).matches();
     }
 
-    public static boolean isIPv6StdAddress(final String input) {
-        return IPV6_STD_PATTERN.matcher(input).matches();
+    public static boolean isIPv6StdAddress(final String address) {
+        return IPV6_STD_PATTERN.matcher(address).matches();
     }
 
-    public static boolean isIPv6HexCompressedAddress(final String input) {
-        return IPV6_HEX_COMPRESSED_PATTERN.matcher(input).matches();
+    public static boolean isIPv6HexCompressedAddress(final String address) {
+        return IPV6_HEX_COMPRESSED_PATTERN.matcher(address).matches();
     }
 
-    public static boolean isIPv6Address(final String input) {
-        return isIPv6StdAddress(input) || isIPv6HexCompressedAddress(input);
+    public static boolean isIPv6Address(final String address) {
+        return isIPv6StdAddress(address) || isIPv6HexCompressedAddress(address);
+    }
+
+    /**
+     * @return The first local IPv4 address, or null
+     */
+    @Nullable
+    public static InetAddress getLocalIPv4Address() {
+        ArrayList<InetAddress> localAddresses = getLocalIPv4Addresses();
+        return localAddresses.size() > 0 ? localAddresses.get(0) : null;
+    }
+
+    /**
+     * @return The list of all IPv4 addresses found
+     */
+    public static ArrayList<InetAddress> getLocalIPv4Addresses() {
+
+        ArrayList<InetAddress> foundAddresses = new ArrayList<>();
+
+        Enumeration<NetworkInterface> ifaces;
+        try {
+            ifaces = NetworkInterface.getNetworkInterfaces();
+
+            while (ifaces.hasMoreElements()) {
+                NetworkInterface iface = ifaces.nextElement();
+                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+
+                while (addresses.hasMoreElements()) {
+                    InetAddress addr = addresses.nextElement();
+                    if (addr instanceof Inet4Address && !addr.isLoopbackAddress()) {
+                        foundAddresses.add(addr);
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return foundAddresses;
     }
 
 
