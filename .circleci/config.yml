@@ -58,7 +58,12 @@ jobs:
           name: Save APK Files
           path: /tmp/artifacts
           destination: build
-       
+      
+      # Publish release to github if applicable
+      - run:
+          name: Publish release to Github
+          command: scripts/github-release.sh
+          
       # Upload to beta if requested and then publish webhooks
       - run:
           name: Publish to Google Play

@@ -1,25 +1,5 @@
 #!/bin/bash
-
-# Fires a webhook to slack to notify of successful upload to beta
-function webhook {
-
-    gradle_app_name="$1"
-    message="$2"
-    channel="#mat-testing"
-    git_hash=`git rev-parse --short HEAD`
-    version=`cat ${gradle_app_name}/build.gradle | grep -m 1 versionName | cut -d'"' -f 2`
-    
-    # TESTING WEBHOOK https://hooks.slack.com/services/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
-    
-    app_name="Android Network Tools Sample App"
-    icon_url="https://github.com/stealthcopter/AndroidNetworkTools/raw/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
-    
-    echo $message
-    echo $channel $gradle_app_name $app_name $version $icon_url
-
-    curl -X POST --data-urlencode 'payload={"channel": "'"$channel"'", "username": "CirclCI Deployment Bot", "text": "*'"$app_name"'* version *'"$version"'*  <'"https://github.com/scottyab/rootbeer/commits/$git_hash"'|'"$git_hash"'> '"$message"'", "icon_url": "'"$icon_url"'"}'   https://hooks.slack.com/services/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
-
-}  
+. config.sh
 
 # Uploads a build to Beta
 function upload_to_beta {
@@ -43,16 +23,15 @@ function upload_to_google_play {
     fi
 }
 
-GIT_COMMIT_DESC=`git log -n 1 $CIRCLE_SHA1`
-GIT_CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
-
-
-# Only deploy releases if we are on the master branch
+# # Only deploy releases if we are on the master branch
 # if [[ $GIT_CURRENT_BRANCH != "master" ]]; then
-#     echo "Not on master branch, so not deploying"
+#     echo "Not on master branch, so not deploying release"
 #     exit 0
 # fi
 
+
+GIT_COMMIT_DESC=`git log -n 1 $CIRCLE_SHA1`
+GIT_CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
 
 # Print the git commit message
 echo "Git commit message: ${GIT_COMMIT_DESC}"
