@@ -1,5 +1,11 @@
 #!/bin/bash
-. config.sh
+
+# Reliably include our config file
+DIR="${BASH_SOURCE%/*}"
+if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
+. "$DIR/config.sh"
+
+
 
 # Uploads a build to Beta
 function upload_to_beta {
