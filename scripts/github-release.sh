@@ -24,8 +24,8 @@ function create_github_release {
 if [[ $GIT_COMMIT_DESC == *"#RELEASE"* ]]; then
     echo "Creating github release"
     if create_github_release $GITHUB_RELEASE_MODULE; then
-        webhook "${1}" "Created github release"
+        webhook $GITHUB_RELEASE_MODULE "Created github release"
     else
-        webhook "${1}" "Failed to create github release :("
+        webhook $GITHUB_RELEASE_MODULE "Failed to create github release :("
     fi
 fi

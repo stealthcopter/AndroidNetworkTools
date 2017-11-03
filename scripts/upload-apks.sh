@@ -36,9 +36,6 @@ function upload_to_google_play {
 # fi
 
 
-GIT_COMMIT_DESC=`git log -n 1 $CIRCLE_SHA1`
-GIT_CURRENT_BRANCH=`git rev-parse --abbrev-ref HEAD`
-
 # Print the git commit message
 echo "Git commit message: ${GIT_COMMIT_DESC}"
 
