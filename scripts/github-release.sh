@@ -52,8 +52,8 @@ function create_github_release {
 if [[ $GIT_COMMIT_DESC != *"undefined"* ]]; then
     echo "Creating github release for tag $GIT_TAG"
     if create_github_release $GITHUB_RELEASE_MODULE; then
-        webhook $GITHUB_RELEASE_MODULE $GITHUB_RELEASE_NAME "Created github release for tag $TAG"
+        webhook $GITHUB_RELEASE_MODULE "$GITHUB_RELEASE_NAME" "Created github release for tag $TAG"
     else
-        webhook $GITHUB_RELEASE_MODULE $GITHUB_RELEASE_NAME "Failed to create github release for tag $TAG :("
+        webhook $GITHUB_RELEASE_MODULE "$GITHUB_RELEASE_NAME" "Failed to create github release for tag $TAG :("
     fi
 fi
