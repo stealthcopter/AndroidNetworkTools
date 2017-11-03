@@ -2,6 +2,7 @@ package com.stealthcopter.networktools.portscanning;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -12,8 +13,9 @@ public class PortScanTCP {
     public static boolean scanAddress(InetAddress ia, int portNo, int timeoutMillis){
         Socket s = null;
         try {
-            s = new Socket(ia, portNo);
-            s.setSoTimeout(timeoutMillis); // This is pointless as we don't get to this point? unless open???
+            s = new Socket();
+            s.connect(new InetSocketAddress(ia, portNo), timeoutMillis);
+
             return true;
         } catch (IOException e) {
             // Don't log anything as we are expecting a lot of these from closed ports.
