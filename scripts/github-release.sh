@@ -49,7 +49,7 @@ function create_github_release {
 # you should ensure tags are push with commits by doing the following:
 # git config --global push.followTags true
 
-if [[ $GIT_COMMIT_DESC != *"undefined"* ]]; then
+if [[ $GIT_TAG != *"undefined"* ]]; then
     echo "Creating github release for tag $GIT_TAG"
     if create_github_release $GITHUB_RELEASE_MODULE; then
         webhook $GITHUB_RELEASE_MODULE "$GITHUB_RELEASE_NAME" "Created github release for tag $TAG"
