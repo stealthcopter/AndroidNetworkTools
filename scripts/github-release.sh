@@ -56,4 +56,6 @@ if [[ $GIT_TAG != *"undefined"* ]]; then
     else
         webhook $GITHUB_RELEASE_MODULE "$GITHUB_RELEASE_NAME" "Failed to create github release for tag $TAG :("
     fi
+else
+    echo "Not releasing as no new tag detected"
 fi

@@ -41,4 +41,6 @@ echo "Git commit message: ${GIT_COMMIT_DESC}"
 
 if [[ $GIT_COMMIT_DESC == *"#DEPLOY"* ]]; then
     upload_to_google_play "app"  
+else
+    echo "Not publishing to Google Play as deploy not found in commit message"
 fi
