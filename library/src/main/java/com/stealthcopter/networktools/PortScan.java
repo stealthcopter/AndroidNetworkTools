@@ -72,19 +72,16 @@ public class PortScan {
         if (IPTools.isIpAddressLocalhost(ia)){
             // If we are scanning a the localhost set the timeout to be very short so we get faster results
             // This will be overridden if user calls setTimeoutMillis manually.
-            Log.e("TESTING", "FOUND LOCALHOST");
             portScan.timeOutMillis = TIMEOUT_LOCALHOST;
             portScan.noThreads = DEFAULT_THREADS_LOCALHOST;
         }
         else if (IPTools.isIpAddressLocalNetwork(ia)){
             // Assume local network (not infallible)
-            Log.e("TESTING", "FOUND LOCALNETWORK");
             portScan.timeOutMillis = TIMEOUT_LOCALNETWORK;
             portScan.noThreads = DEFAULT_THREADS_LOCALNETWORK;
         }
         else{
             // Assume remote network timeouts
-            Log.e("TESTING", "FOUND REMOTE");
             portScan.timeOutMillis = TIMEOUT_REMOTE;
             portScan.noThreads = DEFAULT_THREADS_REMOTE;
         }
