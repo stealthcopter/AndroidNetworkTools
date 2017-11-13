@@ -2,6 +2,7 @@ package com.stealthcopter.networktools;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.stealthcopter.networktools.portscanning.PortScanTCP;
 
@@ -25,6 +26,14 @@ public class PortScan {
     private ArrayList<Integer> ports = new ArrayList<>();
     private ArrayList<Integer> openPortsFound = new ArrayList<>();
 
+    private static final int TIMEOUT_LOCALHOST = 25;
+    private static final int TIMEOUT_LOCALNETWORK = 1000;
+    private static final int TIMEOUT_REMOTE = 2500;
+
+    private static final int DEFAULT_THREADS_LOCALHOST = 7;
+    private static final int DEFAULT_THREADS_LOCALNETWORK = 50;
+    private static final int DEFAULT_THREADS_REMOTE = 50;
+
     @Nullable
     private PortListener portListener;
 
@@ -46,10 +55,7 @@ public class PortScan {
      *               for a global IPv6 address.
      */
     public static PortScan onAddress(@NonNull String address) throws UnknownHostException {
-        PortScan portScan = new PortScan();
-        InetAddress ia = InetAddress.getByName(address);
-        portScan.setAddress(ia);
-        return portScan;
+        return onAddress(InetAddress.getByName(address));
     }
 
     /**
@@ -60,6 +66,29 @@ public class PortScan {
     public static PortScan onAddress(@NonNull InetAddress ia) {
         PortScan portScan = new PortScan();
         portScan.setAddress(ia);
+
+        // Try and work out automatically what kind of host we are scanning
+        // local host (this device) / local network / remote
+        if (IPTools.isIpAddressLocalhost(ia)){
+            // If we are scanning a the localhost set the timeout to be very short so we get faster results
+            // This will be overridden if user calls setTimeoutMillis manually.
+            Log.e("TESTING", "FOUND LOCALHOST");
+            portScan.timeOutMillis = TIMEOUT_LOCALHOST;
+            portScan.noThreads = DEFAULT_THREADS_LOCALHOST;
+        }
+        else if (IPTools.isIpAddressLocalNetwork(ia)){
+            // Assume local network (not infallible)
+            Log.e("TESTING", "FOUND LOCALNETWORK");
+            portScan.timeOutMillis = TIMEOUT_LOCALNETWORK;
+            portScan.noThreads = DEFAULT_THREADS_LOCALNETWORK;
+        }
+        else{
+            // Assume remote network timeouts
+            Log.e("TESTING", "FOUND REMOTE");
+            portScan.timeOutMillis = TIMEOUT_REMOTE;
+            portScan.noThreads = DEFAULT_THREADS_REMOTE;
+        }
+
         return portScan;
     }
 

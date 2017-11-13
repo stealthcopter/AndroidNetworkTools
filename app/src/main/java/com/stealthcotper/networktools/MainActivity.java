@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         final long startTimeMillis = System.currentTimeMillis();
 
         // Perform an asynchronous port scan
-        PortScan.onAddress(ipAddress).setTimeOutMillis(1000).setPortsAll().setNoThreads(50).doScan(new PortScan.PortListener() {
+        PortScan.onAddress(ipAddress).setPortsAll().doScan(new PortScan.PortListener() {
             @Override
             public void onResult(int portNo, boolean open) {
                 if (open) appendResultsText("Open: " + portNo);
