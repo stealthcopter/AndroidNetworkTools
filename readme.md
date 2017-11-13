@@ -39,7 +39,7 @@ then add a library dependency. **Remember** to check for latest release [here](h
 
 ```groovy
     dependencies {
-        compile 'com.github.stealthcopter:AndroidNetworkTools:0.2.1'
+        compile 'com.github.stealthcopter:AndroidNetworkTools:0.3.0'
     }
 ```
 
@@ -47,6 +47,49 @@ then add a library dependency. **Remember** to check for latest release [here](h
 Requires internet permission (obviously...)
 ```xml
   <uses-permission android:name="android.permission.INTERNET" />
+```
+
+### Port Scanning
+
+A simple java based TCP port scanner, fast and easy to use.
+
+```java
+    // Synchronously
+    ArrayList<Integer> openPorts = PortScan.onAddress("192.168.0.1").setPort(21).doScan();
+
+    // Asynchronously
+    PortScan.onAddress("192.168.0.1").setTimeOutMillis(1000).setPortsAll().doScan(new PortScan.PortListener() {
+      @Override
+      public void onResult(int portNo, boolean open) {
+        if (open) // Stub: found open port
+      }
+
+      @Override
+      public void onFinished(ArrayList<Integer> openPorts) {
+        // Stub: Finished scanning
+      }
+    });
+
+```
+
+### Subnet Devices
+
+Finds devices that respond to ping that are on the same subnet as the current device.
+
+```
+    // Asynchronously
+    SubnetDevices.fromLocalAddress().findDevices(new SubnetDevices.OnSubnetDeviceFound() {
+        @Override
+        public void onDeviceFound(Device device) {
+            // Stub: Found subnet device
+        }
+
+        @Override
+        public void onFinished(ArrayList<Device> devicesFound) {
+            // Stub: Finished scanning
+        }
+    });
+
 ```
 
 ### Ping
@@ -68,28 +111,7 @@ Uses the native ping binary if available on the device (some devices come withou
 
 Note: If we do have to fall back to using TCP port 7 (the java way) to detect devices we will find significantly less than with the native ping binary. If this is an issue you could consider adding a ping binary to your application or device so that it is always available.
 
-### Port Scanning
 
-A simple java based TCP port scanner, fast and easy to use. 
-
-```java
-    // Synchronously 
-    ArrayList<Integer> openPorts = PortScan.onAddress("192.168.0.1").setPort(21).doScan();
-    
-    // Asynchronously
-    PortScan.onAddress("192.168.0.1").setTimeOutMillis(1000).setPortsAll().doScan(new PortScan.PortListener() {
-      @Override
-      public void onResult(int portNo, boolean open) {
-        if (open) // Stub: found open port
-      }
-
-      @Override
-      public void onFinished(ArrayList<Integer> openPorts) {
-	// Stub: finished scanning
-      }
-    });
-
-```
 Note: If you want a more advanced portscanner you should consider compiling nmap into your project and using that instead.
 
 ### Wake-On-Lan
