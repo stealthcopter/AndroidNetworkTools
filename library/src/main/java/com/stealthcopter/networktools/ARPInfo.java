@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by mat on 09/12/15.
  * <p/>
- * Looks at the file at /proc/net/arp to find ip/mac addresses from the cache
+ * Looks at the file at /proc/net/arp to fromIPAddress ip/mac addresses from the cache
  * We assume that the file has this structure:
  * <p/>
  * IP address       HW type     Flags       HW address            Mask     Device
@@ -20,6 +20,11 @@ import java.util.ArrayList;
  * 192.168.18.36    0x1         0x2         00:22:43:ab:2a:5b     *        eth0
  */
 public class ARPInfo {
+
+    // This class is not to be instantiated
+    private ARPInfo() {
+    }
+
 
     /**
      * Try to extract a hardware MAC address from a given IP address using the

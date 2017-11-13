@@ -11,7 +11,7 @@ import static org.mockito.Mockito.mock;
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
-public class ARPInfoUnitTest {
+public class ARPInfoTest {
 
     @Test
     public void nullIPsandMacsReturnNull() throws Exception {

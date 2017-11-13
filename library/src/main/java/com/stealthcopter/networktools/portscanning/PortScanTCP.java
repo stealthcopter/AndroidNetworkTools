@@ -10,6 +10,10 @@ import java.net.Socket;
  */
 public class PortScanTCP {
 
+    // This class is not to be instantiated
+    private PortScanTCP() {
+    }
+
     public static boolean scanAddress(InetAddress ia, int portNo, int timeoutMillis){
         Socket s = null;
         try {

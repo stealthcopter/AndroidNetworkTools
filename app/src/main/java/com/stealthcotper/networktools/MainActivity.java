@@ -14,13 +14,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.stealthcopter.networktools.ARPInfo;
+import com.stealthcopter.networktools.IPTools;
 import com.stealthcopter.networktools.Ping;
 import com.stealthcopter.networktools.PortScan;
+import com.stealthcopter.networktools.SubnetDevices;
 import com.stealthcopter.networktools.WakeOnLan;
 import com.stealthcopter.networktools.ping.PingResult;
 import com.stealthcopter.networktools.ping.PingStats;
+import com.stealthcopter.networktools.subnet.Device;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
 
         resultText = (TextView) findViewById(R.id.resultText);
         editIpAddress = (EditText) findViewById(R.id.editIpAddress);
+
+        InetAddress ipAddress = IPTools.getLocalIPv4Address();
+        if (ipAddress != null){
+            editIpAddress.setText(ipAddress.getHostAddress());
+        }
 
         findViewById(R.id.pingButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +95,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+        findViewById(R.id.subnetDevicesButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            findSubnetDevices();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
 
+    }
 
     private void appendResultsText(final String text) {
         runOnUiThread(new Runnable() {
@@ -146,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         String macAddress = ARPInfo.getMACFromIPAddress(ipAddress);
 
         if (macAddress == null) {
-            appendResultsText("Could not find MAC address, cannot send WOL packet without it.");
+            appendResultsText("Could not fromIPAddress MAC address, cannot send WOL packet without it.");
             return;
         }
 
@@ -174,8 +198,10 @@ public class MainActivity extends AppCompatActivity {
         appendResultsText("PortScanning IP: " + ipAddress);
         ArrayList<Integer> openPorts = PortScan.onAddress(ipAddress).setPort(21).doScan();
 
+        final long startTimeMillis = System.currentTimeMillis();
+
         // Perform an asynchronous port scan
-        PortScan.onAddress(ipAddress).setTimeOutMillis(1000).setPortsAll().doScan(new PortScan.PortListener() {
+        PortScan.onAddress(ipAddress).setPortsAll().doScan(new PortScan.PortListener() {
             @Override
             public void onResult(int portNo, boolean open) {
                 if (open) appendResultsText("Open: " + portNo);
@@ -184,11 +210,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinished(ArrayList<Integer> openPorts) {
                 appendResultsText("Open Ports: " + openPorts.size());
+                appendResultsText("Time Taken: " + ((System.currentTimeMillis() - startTimeMillis)/1000.0f));
             }
         });
 
+    }
+
+
+    private void findSubnetDevices() {
+
+        final long startTimeMillis = System.currentTimeMillis();
+
+        SubnetDevices.fromLocalAddress().findDevices(new SubnetDevices.OnSubnetDeviceFound() {
+            @Override
+            public void onDeviceFound(Device device) {
+                appendResultsText("Device: " + device.ip+" "+ device.hostname);
+            }
+
+            @Override
+            public void onFinished(ArrayList<Device> devicesFound) {
+                float timeTaken =  (System.currentTimeMillis() - startTimeMillis)/1000.0f;
+                appendResultsText("Devices Found: " + devicesFound.size());
+                appendResultsText("Finished "+timeTaken+" s");
+            }
+        });
 
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

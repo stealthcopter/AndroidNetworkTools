@@ -31,12 +31,14 @@ jobs:
           name: Run Tests
           command: ./gradlew test
 
-      - store_artifacts:
-          path: app/build/reports
-          destination: reports
+      #- store_test_results:
+          #path: app/build/reports
+          #destination: reports
 
       - store_test_results:
-          path: app/build/test-results
+          name: Save Libary Unit Tests
+          path: library/build/reports
+          destination: reports
 
       # Compile release apks
       - run:
@@ -58,7 +60,12 @@ jobs:
           name: Save APK Files
           path: /tmp/artifacts
           destination: build
-       
+      
+      # Publish release to github if applicable
+      - run:
+          name: Publish release to Github
+          command: scripts/github-release.sh
+          
       # Upload to beta if requested and then publish webhooks
       - run:
           name: Publish to Google Play
