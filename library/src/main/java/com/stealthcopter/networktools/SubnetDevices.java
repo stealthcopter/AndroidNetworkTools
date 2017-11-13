@@ -21,6 +21,7 @@ public class SubnetDevices {
     private ArrayList<String> addresses;
     private ArrayList<Device> devicesFound;
     private OnSubnetDeviceFound listener;
+    private int timeOutMillis = 2500;
 
     // This class is not to be instantiated
     private SubnetDevices() {
@@ -92,6 +93,18 @@ public class SubnetDevices {
         return this;
     }
 
+    /**
+     * Sets the timeout for each address we try to ping
+     *
+     * @return this object to allow chaining
+     */
+    public SubnetDevices setTimeOutMillis(int timeOutMillis){
+        if (timeOutMillis<0) throw new IllegalArgumentException("Timeout cannot be less than 0");
+        this.timeOutMillis = timeOutMillis;
+        return this;
+    }
+
+
     public void findDevices(final OnSubnetDeviceFound listener) {
 
         this.listener = listener;
@@ -134,7 +147,7 @@ public class SubnetDevices {
         public void run() {
             try {
                 InetAddress ia = InetAddress.getByName(address);
-                PingResult pingResult = Ping.onAddress(ia).doPing();
+                PingResult pingResult = Ping.onAddress(ia).setTimeOutMillis(timeOutMillis).doPing();
                 if (pingResult.isReachable) {
                     Device device = new Device(ia);
                     device.mac = ARPInfo.getMACFromIPAddress(ia.getHostAddress());

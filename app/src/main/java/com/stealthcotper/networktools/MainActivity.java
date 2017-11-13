@@ -221,8 +221,6 @@ public class MainActivity extends AppCompatActivity {
 
         final long startTimeMillis = System.currentTimeMillis();
 
-        String partialIpAddress = editIpAddress.getText().toString();
-
         SubnetDevices.fromLocalAddress().findDevices(new SubnetDevices.OnSubnetDeviceFound() {
             @Override
             public void onDeviceFound(Device device) {
@@ -232,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinished(ArrayList<Device> devicesFound) {
                 float timeTaken =  (System.currentTimeMillis() - startTimeMillis)/1000.0f;
+                appendResultsText("Devices Found: " + devicesFound.size());
                 appendResultsText("Finished "+timeTaken+" s");
             }
         });

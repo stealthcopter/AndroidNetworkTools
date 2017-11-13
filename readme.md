@@ -51,7 +51,7 @@ Requires internet permission (obviously...)
 
 ### Port Scanning
 
-A simple java based TCP port scanner, fast and easy to use.
+A simple java based TCP port scanner, fast and easy to use. By default it will try and guess the best timeout and threads to use while scanning depending on if the address looks like localhost, local network or remote. You can override these yourself by calling setNoThreads() and setTimeoutMillis()
 
 ```java
     // Synchronously
@@ -74,7 +74,7 @@ A simple java based TCP port scanner, fast and easy to use.
 
 ### Subnet Devices
 
-Finds devices that respond to ping that are on the same subnet as the current device.
+Finds devices that respond to ping that are on the same subnet as the current device. You can set the timeout for the ping with setTimeOutMillis() \[default 2500\] and the number of threads with setNoThreads() \[default 255\]
 
 ```
     // Asynchronously

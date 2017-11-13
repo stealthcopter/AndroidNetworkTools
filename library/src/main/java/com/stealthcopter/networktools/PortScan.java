@@ -105,7 +105,7 @@ public class PortScan {
      * @return this object to allow chaining
      */
     public PortScan setTimeOutMillis(int timeOutMillis){
-        if (timeOutMillis<0) throw new IllegalArgumentException("Times cannot be less than 0");
+        if (timeOutMillis<0) throw new IllegalArgumentException("Timeout cannot be less than 0");
         this.timeOutMillis = timeOutMillis;
         return this;
     }
