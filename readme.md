@@ -5,9 +5,9 @@
 
 Disappointed by the lack of good network apis in android / java I developed a collection of handy networking tools for everyday android development.
 
-* Ping
 * Port Scanning
-* Subnet tools (find devices on local network)
+* Subnet Device Finder (discovers devices on local network)
+* Ping
 * Wake-On-Lan
 * & More :)
 
