@@ -71,9 +71,10 @@ public class SubnetDevices {
         subnetDevice.addresses.addAll(ARPInfo.getAllIPAddressesInARPCache());
 
         // Add all missing addresses in subnet
+        String segment = ipAddress.substring(0, ipAddress.lastIndexOf(".") + 1);
         for (int j = 0; j < 255; j++) {
-            if (!subnetDevice.addresses.contains(ipAddress + j)) {
-                subnetDevice.addresses.add(ipAddress + j);
+            if (!subnetDevice.addresses.contains(segment + j)) {
+                subnetDevice.addresses.add(segment + j);
             }
         }
 
