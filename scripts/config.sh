@@ -19,7 +19,7 @@ function webhook {
     app_name="$2"
     message="$3"
     git_hash=`git rev-parse --short HEAD`
-    version=`cat build.gradle | grep -m 1 versionName | cut -d'"' -f 2`
+    version=`cat ${gradle_app_name}/build.gradle | grep -m 1 versionName | cut -d'"' -f 2`
     
     echo $message
     echo $channel $gradle_app_name $app_name $version $ICON_URL

@@ -28,6 +28,6 @@ subprojects {
   ext.targetSdkVer = 24
   ext.supportLibVer = "24.0.0"
 
-  ext.versionName = "0.3.06"
-  ext.versionCode = 12
+  ext.versionName = "0.3.08"
+  ext.versionCode = 13
 }

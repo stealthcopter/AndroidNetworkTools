@@ -18,7 +18,7 @@ GITHUB_UPLOAD_URL="https://uploads.github.com/repos/stealthcopter/AndroidNetwork
 
 function create_github_release { 
 
-    version=`cat build.gradle | grep -m 1 versionName | cut -d'"' -f 2`
+    version=`cat $1/build.gradle | grep -m 1 versionName | cut -d'"' -f 2`
     
     echo "Uploading release"
     
