@@ -8,6 +8,7 @@ import com.stealthcopter.networktools.subnet.Device;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -75,6 +76,23 @@ public class SubnetDevices {
                 subnetDevice.addresses.add(ipAddress + j);
             }
         }
+
+        return subnetDevice;
+
+    }
+
+
+    /**
+     * @param ipAddresses - the ipAddresses of devices to be checked
+     *
+     */
+    public static SubnetDevices fromIPList(@NonNull final List<String> ipAddresses) {
+
+        SubnetDevices subnetDevice = new SubnetDevices();
+
+        subnetDevice.addresses = new ArrayList<>();
+
+        subnetDevice.addresses.addAll(ipAddresses);
 
         return subnetDevice;
 
