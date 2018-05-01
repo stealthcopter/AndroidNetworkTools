@@ -21,7 +21,7 @@ import com.stealthcopter.networktools.SubnetDevices;
 import com.stealthcopter.networktools.WakeOnLan;
 import com.stealthcopter.networktools.ping.PingResult;
 import com.stealthcopter.networktools.ping.PingStats;
-import com.stealthcopter.networktools.subnet.SubnetDevice;
+import com.stealthcopter.networktools.subnet.Device;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         InetAddress ipAddress = IPTools.getLocalIPv4Address();
         if (ipAddress != null){
-            editIpAddress.setText(ipAddress.toString());
+            editIpAddress.setText(ipAddress.getHostAddress());
         }
 
         findViewById(R.id.pingButton).setOnClickListener(new View.OnClickListener() {
@@ -198,8 +198,10 @@ public class MainActivity extends AppCompatActivity {
         appendResultsText("PortScanning IP: " + ipAddress);
         ArrayList<Integer> openPorts = PortScan.onAddress(ipAddress).setPort(21).doScan();
 
+        final long startTimeMillis = System.currentTimeMillis();
+
         // Perform an asynchronous port scan
-        PortScan.onAddress(ipAddress).setTimeOutMillis(1000).setPortsAll().doScan(new PortScan.PortListener() {
+        PortScan.onAddress(ipAddress).setPortsAll().doScan(new PortScan.PortListener() {
             @Override
             public void onResult(int portNo, boolean open) {
                 if (open) appendResultsText("Open: " + portNo);
@@ -208,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFinished(ArrayList<Integer> openPorts) {
                 appendResultsText("Open Ports: " + openPorts.size());
+                appendResultsText("Time Taken: " + ((System.currentTimeMillis() - startTimeMillis)/1000.0f));
             }
         });
 
@@ -218,17 +221,16 @@ public class MainActivity extends AppCompatActivity {
 
         final long startTimeMillis = System.currentTimeMillis();
 
-        String partialIpAddress = editIpAddress.getText().toString();
-
         SubnetDevices.fromLocalAddress().findDevices(new SubnetDevices.OnSubnetDeviceFound() {
             @Override
-            public void onDeviceFound(SubnetDevice subnetDevice) {
-                appendResultsText("Device: " + subnetDevice.ip+" "+ subnetDevice.hostname);
+            public void onDeviceFound(Device device) {
+                appendResultsText("Device: " + device.ip+" "+ device.hostname);
             }
 
             @Override
-            public void onFinished(ArrayList<SubnetDevice> devicesFound) {
+            public void onFinished(ArrayList<Device> devicesFound) {
                 float timeTaken =  (System.currentTimeMillis() - startTimeMillis)/1000.0f;
+                appendResultsText("Devices Found: " + devicesFound.size());
                 appendResultsText("Finished "+timeTaken+" s");
             }
         });

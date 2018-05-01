@@ -3,11 +3,12 @@ package com.stealthcopter.networktools;
 import android.support.annotation.NonNull;
 
 import com.stealthcopter.networktools.ping.PingResult;
-import com.stealthcopter.networktools.subnet.SubnetDevice;
+import com.stealthcopter.networktools.subnet.Device;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -19,16 +20,17 @@ public class SubnetDevices {
     private int noThreads = 255;
 
     private ArrayList<String> addresses;
-    private ArrayList<SubnetDevice> devicesFound;
+    private ArrayList<Device> devicesFound;
     private OnSubnetDeviceFound listener;
+    private int timeOutMillis = 2500;
 
     // This class is not to be instantiated
     private SubnetDevices() {
     }
 
     public interface OnSubnetDeviceFound {
-        void onDeviceFound(SubnetDevice subnetDevice);
-        void onFinished(ArrayList<SubnetDevice> devicesFound);
+        void onDeviceFound(Device device);
+        void onFinished(ArrayList<Device> devicesFound);
     }
 
     /**
@@ -69,11 +71,29 @@ public class SubnetDevices {
         subnetDevice.addresses.addAll(ARPInfo.getAllIPAddressesInARPCache());
 
         // Add all missing addresses in subnet
+        String segment = ipAddress.substring(0, ipAddress.lastIndexOf(".") + 1);
         for (int j = 0; j < 255; j++) {
-            if (!subnetDevice.addresses.contains(ipAddress + j)) {
-                subnetDevice.addresses.add(ipAddress + j);
+            if (!subnetDevice.addresses.contains(segment + j)) {
+                subnetDevice.addresses.add(segment + j);
             }
         }
+
+        return subnetDevice;
+
+    }
+
+
+    /**
+     * @param ipAddresses - the ipAddresses of devices to be checked
+     *
+     */
+    public static SubnetDevices fromIPList(@NonNull final List<String> ipAddresses) {
+
+        SubnetDevices subnetDevice = new SubnetDevices();
+
+        subnetDevice.addresses = new ArrayList<>();
+
+        subnetDevice.addresses.addAll(ipAddresses);
 
         return subnetDevice;
 
@@ -86,11 +106,23 @@ public class SubnetDevices {
      * @return self
      * @throws IllegalAccessException
      */
-    public SubnetDevices setNoThreads(int noThreads) throws IllegalAccessException {
+    public SubnetDevices setNoThreads(int noThreads) {
         if (noThreads < 1) throw new IllegalArgumentException("Cannot have less than 1 thread");
         this.noThreads = noThreads;
         return this;
     }
+
+    /**
+     * Sets the timeout for each address we try to ping
+     *
+     * @return this object to allow chaining
+     */
+    public SubnetDevices setTimeOutMillis(int timeOutMillis){
+        if (timeOutMillis<0) throw new IllegalArgumentException("Timeout cannot be less than 0");
+        this.timeOutMillis = timeOutMillis;
+        return this;
+    }
+
 
     public void findDevices(final OnSubnetDeviceFound listener) {
 
@@ -118,9 +150,9 @@ public class SubnetDevices {
         this.listener.onFinished(devicesFound);
     }
 
-    private synchronized void subnetDeviceFound(SubnetDevice subnetDevice){
-        devicesFound.add(subnetDevice);
-        listener.onDeviceFound(subnetDevice);
+    private synchronized void subnetDeviceFound(Device device){
+        devicesFound.add(device);
+        listener.onDeviceFound(device);
     }
 
     public class SubnetDeviceFinderRunnable implements Runnable {
@@ -134,12 +166,12 @@ public class SubnetDevices {
         public void run() {
             try {
                 InetAddress ia = InetAddress.getByName(address);
-                PingResult pingResult = Ping.onAddress(ia).doPing();
+                PingResult pingResult = Ping.onAddress(ia).setTimeOutMillis(timeOutMillis).doPing();
                 if (pingResult.isReachable) {
-                    SubnetDevice subnetDevice = new SubnetDevice(ia);
-                    subnetDevice.mac = ARPInfo.getMACFromIPAddress(ia.getHostAddress());
-                    subnetDevice.time = pingResult.timeTaken;
-                    subnetDeviceFound(subnetDevice);
+                    Device device = new Device(ia);
+                    device.mac = ARPInfo.getMACFromIPAddress(ia.getHostAddress());
+                    device.time = pingResult.timeTaken;
+                    subnetDeviceFound(device);
                 }
             } catch (UnknownHostException e) {
                 e.printStackTrace();
