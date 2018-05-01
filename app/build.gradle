@@ -57,31 +57,17 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
-
-  productFlavors {
-    regular {  }
-    // Add a CI only flavor that has extra permissions needed for CI to perform
-    ci {  }
-  }
-
-}
-
-// Spoon used for CI / Testing
-spoon {
-  debug = true
-  // To grant permissions to Android M >= devices */
-  grantAllPermissions = true
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile "com.android.support:appcompat-v7:$supportLibVer"
-  compile "com.android.support:design:$supportLibVer"
-  compile project(':library')
+    implementation project(':library')
 
-  testCompile 'junit:junit:4.12'
+    implementation "com.android.support:appcompat-v7:$supportLibVer"
+    implementation "com.android.support:design:$supportLibVer"
 
-  androidTestCompile 'com.squareup.spoon:spoon-client:1.6.4'
-  androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
-  androidTestCompile('com.android.support.test.espresso:espresso-intents:2.2')
+    testImplementation 'junit:junit:4.12'
+
+    androidTestImplementation 'com.squareup.spoon:spoon-client:1.6.4'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation('com.android.support.test.espresso:espresso-intents:2.2')
 }

@@ -3,7 +3,7 @@ package com.stealthcopter.networktools;
 import android.support.annotation.NonNull;
 
 import com.stealthcopter.networktools.ping.PingResult;
-import com.stealthcopter.networktools.subnet.SubnetInfo;
+import com.stealthcopter.networktools.subnet.SubnetDevice;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -19,7 +19,7 @@ public class SubnetDevices {
     private int noThreads = 255;
 
     private ArrayList<String> addresses;
-    private ArrayList<SubnetInfo> devicesFound;
+    private ArrayList<SubnetDevice> devicesFound;
     private OnSubnetDeviceFound listener;
 
     // This class is not to be instantiated
@@ -27,8 +27,8 @@ public class SubnetDevices {
     }
 
     public interface OnSubnetDeviceFound {
-        void onDeviceFound(SubnetInfo subnetInfo);
-        void onFinished(ArrayList<SubnetInfo> devicesFound);
+        void onDeviceFound(SubnetDevice subnetDevice);
+        void onFinished(ArrayList<SubnetDevice> devicesFound);
     }
 
     /**
@@ -118,9 +118,9 @@ public class SubnetDevices {
         this.listener.onFinished(devicesFound);
     }
 
-    private synchronized void subnetDeviceFound(SubnetInfo subnetInfo){
-        devicesFound.add(subnetInfo);
-        listener.onDeviceFound(subnetInfo);
+    private synchronized void subnetDeviceFound(SubnetDevice subnetDevice){
+        devicesFound.add(subnetDevice);
+        listener.onDeviceFound(subnetDevice);
     }
 
     public class SubnetDeviceFinderRunnable implements Runnable {
@@ -136,10 +136,10 @@ public class SubnetDevices {
                 InetAddress ia = InetAddress.getByName(address);
                 PingResult pingResult = Ping.onAddress(ia).doPing();
                 if (pingResult.isReachable) {
-                    SubnetInfo subnetInfo = new SubnetInfo(ia);
-                    subnetInfo.mac = ARPInfo.getMACFromIPAddress(ia.getHostAddress());
-                    subnetInfo.time = pingResult.timeTaken;
-                    subnetDeviceFound(subnetInfo);
+                    SubnetDevice subnetDevice = new SubnetDevice(ia);
+                    subnetDevice.mac = ARPInfo.getMACFromIPAddress(ia.getHostAddress());
+                    subnetDevice.time = pingResult.timeTaken;
+                    subnetDeviceFound(subnetDevice);
                 }
             } catch (UnknownHostException e) {
                 e.printStackTrace();

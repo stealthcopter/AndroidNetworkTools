@@ -14,13 +14,17 @@ public class PortScanTCP {
     private PortScanTCP() {
     }
 
-    public static boolean scanAddress(InetAddress ia, int portNo, int timeoutMillis){
+    public static PortInfo scanAddress(InetAddress ia, int portNo, int timeoutMillis){
+
+        PortInfo portInfo = new PortInfo(ia.getHostAddress(), portNo);
+        portInfo.open = false;
+
         Socket s = null;
         try {
             s = new Socket();
             s.connect(new InetSocketAddress(ia, portNo), timeoutMillis);
 
-            return true;
+            portInfo.open = true;
         } catch (IOException e) {
             // Don't log anything as we are expecting a lot of these from closed ports.
         }
@@ -33,7 +37,7 @@ public class PortScanTCP {
                 }
             }
         }
-        return false;
+        return portInfo;
     }
 
 }

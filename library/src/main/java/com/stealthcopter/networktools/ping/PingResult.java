@@ -24,7 +24,7 @@ public class PingResult {
     }
 
     public boolean hasError(){
-        return !TextUtils.isEmpty(error);
+        return error != null;
     }
 
     public float getTimeTaken(){

@@ -17,7 +17,7 @@ public class PingStats {
         this.ia=ia;
         this.noPings = noPings;
         this.packetsLost = packetsLost;
-        this.averageTimeTaken = (100.0f * totalTimeTaken) / noPings;
+        this.averageTimeTaken = totalTimeTaken / noPings;
         this.minTimeTaken = minTimeTaken;
         this.maxTimeTaken = maxTimeTaken;
     }

@@ -13,22 +13,22 @@ import java.net.InetAddress;
  * @author <a href="mailto:matthew.rollings@intohand.com">Matthew Rollings</a>
  *         Copyright (c) 2014 Intohand Ltd. All rights reserved.
  */
-public class SubnetInfo {
-    public String ip = "";
-    public String hostname = "";
-    public String mac = "";
+public class SubnetDevice {
+    public String ip;
+    public String hostname;
+    public String mac;
 
 
     public float time = 0;
 
-    public SubnetInfo(InetAddress ip) {
+    public SubnetDevice(InetAddress ip) {
         this.ip = ip.getHostAddress();
         this.hostname = ip.getCanonicalHostName();
     }
 
     @Override
     public String toString() {
-        return "SubnetInfo{" +
+        return "SubnetDevice{" +
                 "ip='" + ip + '\'' +
                 ", hostname='" + hostname + '\'' +
                 ", mac='" + mac + '\'' +

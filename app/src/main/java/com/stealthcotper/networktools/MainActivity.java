@@ -21,7 +21,7 @@ import com.stealthcopter.networktools.SubnetDevices;
 import com.stealthcopter.networktools.WakeOnLan;
 import com.stealthcopter.networktools.ping.PingResult;
 import com.stealthcopter.networktools.ping.PingStats;
-import com.stealthcopter.networktools.subnet.SubnetInfo;
+import com.stealthcopter.networktools.subnet.SubnetDevice;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -222,12 +222,12 @@ public class MainActivity extends AppCompatActivity {
 
         SubnetDevices.fromLocalAddress().findDevices(new SubnetDevices.OnSubnetDeviceFound() {
             @Override
-            public void onDeviceFound(SubnetInfo subnetInfo) {
-                appendResultsText("Device: " + subnetInfo.ip+" "+subnetInfo.hostname);
+            public void onDeviceFound(SubnetDevice subnetDevice) {
+                appendResultsText("Device: " + subnetDevice.ip+" "+ subnetDevice.hostname);
             }
 
             @Override
-            public void onFinished(ArrayList<SubnetInfo> devicesFound) {
+            public void onFinished(ArrayList<SubnetDevice> devicesFound) {
                 float timeTaken =  (System.currentTimeMillis() - startTimeMillis)/1000.0f;
                 appendResultsText("Finished "+timeTaken+" s");
             }
