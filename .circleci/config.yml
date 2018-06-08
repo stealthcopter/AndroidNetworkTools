@@ -43,7 +43,7 @@ jobs:
       # Compile release apks
       - run:
           name: Compile APKs
-          command: ./gradlew assembleRegularRelease
+          command: ./gradlew assembleRelease
 
 
       # Copy APK files to artifacts

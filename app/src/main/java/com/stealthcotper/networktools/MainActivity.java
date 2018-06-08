@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        resultText = (TextView) findViewById(R.id.resultText);
-        editIpAddress = (EditText) findViewById(R.id.editIpAddress);
+        resultText = findViewById(R.id.resultText);
+        editIpAddress = findViewById(R.id.editIpAddress);
 
         InetAddress ipAddress = IPTools.getLocalIPv4Address();
         if (ipAddress != null){
@@ -239,10 +239,7 @@ public class MainActivity extends AppCompatActivity {
                 appendResultsText("Finished "+timeTaken+" s");
             }
         });
-
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
