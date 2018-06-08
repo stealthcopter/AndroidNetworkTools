@@ -18,64 +18,64 @@ import static org.junit.Assert.assertTrue;
 public class IPToolsTest {
 
 
-    String[] getInvalidIpAddresses(){
+    String[] getInvalidIpAddresses() {
         return new String[]{null, "beepbeep", "nope", "hello"};
     }
 
-    String[] getIPv4Addresses(){
+    String[] getIPv4Addresses() {
         return new String[]{"192.168.0.1", "127.0.0.1", "10.0.0.1",};
     }
 
-    String[] getIPv6Addresses(){
+    String[] getIPv6Addresses() {
         return new String[]{"2001:0db8:85a3:0000:0000:8a2e:0370:7334"};
     }
 
-    String[] getIPv6AddressesHexCompresed(){
+    String[] getIPv6AddressesHexCompresed() {
         return new String[]{"2001:db8:85a3::8a2e:370:7334", "2001::8a2e:370:7334", "2001:", "2001::2001"};
     }
 
     @Test
     public void testIsIPv4Address() {
 
-        for (String address: getIPv4Addresses()) {
+        for (String address : getIPv4Addresses()) {
             assertTrue(IPTools.isIPv4Address(address));
         }
 
-        for (String address: getIPv6Addresses()) {
+        for (String address : getIPv6Addresses()) {
             assertFalse(IPTools.isIPv4Address(address));
         }
 
-        for (String address: getInvalidIpAddresses()) {
+        for (String address : getInvalidIpAddresses()) {
             assertFalse(IPTools.isIPv4Address(address));
         }
     }
 
     @Test
     public void testIsIPv6Address() {
-        for (String address: getIPv4Addresses()) {
+        for (String address : getIPv4Addresses()) {
             assertFalse(IPTools.isIPv6Address(address));
         }
 
-        for (String address: getIPv6Addresses()) {
+        for (String address : getIPv6Addresses()) {
             assertTrue(IPTools.isIPv6Address(address));
         }
 
-        for (String address: getInvalidIpAddresses()) {
+        for (String address : getInvalidIpAddresses()) {
             assertFalse(IPTools.isIPv6Address(address));
         }
     }
 
     @Test
     public void testIsIPv6AddressesStandard() {
-        for (String address: getIPv4Addresses()) {
+        for (String address : getIPv4Addresses()) {
             assertFalse(IPTools.isIPv6StdAddress(address));
         }
 
-        for (String address: getIPv6Addresses()) {
+        for (String address : getIPv6Addresses()) {
             assertTrue(IPTools.isIPv6StdAddress(address));
         }
 
-        for (String address: getInvalidIpAddresses()) {
+        for (String address : getInvalidIpAddresses()) {
             assertFalse(IPTools.isIPv6StdAddress(address));
         }
     }
@@ -83,13 +83,13 @@ public class IPToolsTest {
     @Test
     @Ignore  // Not working yet, possibly not correct pattern for compression
     public void testIPv6HexCompressedAddress() {
-        for (String address: getIPv6AddressesHexCompresed()) {
+        for (String address : getIPv6AddressesHexCompresed()) {
             assertTrue(IPTools.isIPv6HexCompressedAddress(address));
         }
     }
 
     @Test
-    public void testGetLocalAddressReturnsLocalIP(){
+    public void testGetLocalAddressReturnsLocalIP() {
         InetAddress test = IPTools.getLocalIPv4Address();
 
         assertNotNull(test);
@@ -100,10 +100,10 @@ public class IPToolsTest {
 
 
     @Test
-    public void testGetAllLocalAddressReturnsLocalIP(){
+    public void testGetAllLocalAddressReturnsLocalIP() {
         List<InetAddress> test = IPTools.getLocalIPv4Addresses();
 
-        for (InetAddress address : test){
+        for (InetAddress address : test) {
             System.out.println(address);
             assertNotNull(address);
 

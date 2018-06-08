@@ -1,7 +1,5 @@
 package com.stealthcopter.networktools;
 
-import android.support.annotation.NonNull;
-
 import com.stealthcopter.networktools.ping.PingResult;
 import com.stealthcopter.networktools.ping.PingStats;
 import com.stealthcopter.networktools.ping.PingTools;
@@ -18,9 +16,11 @@ public class Ping {
     private Ping() {
     }
 
-    public interface PingListener{
+    public interface PingListener {
         void onResult(PingResult pingResult);
+
         void onFinished(PingStats pingStats);
+
         void onError(Exception e);
     }
 
@@ -33,14 +33,14 @@ public class Ping {
 
     /**
      * Set the address to ping
-     *
+     * <p>
      * Note that a lookup is not performed here so that we do not accidentally perform a network
      * request on the UI thread.
      *
      * @param address - Address to be pinged
      * @return this object to allow chaining
      */
-    public static Ping onAddress(@NonNull String address) {
+    public static Ping onAddress(String address) {
         Ping ping = new Ping();
         ping.setAddressString(address);
         return ping;
@@ -48,10 +48,11 @@ public class Ping {
 
     /**
      * Set the address to ping
+     *
      * @param ia - Address to be pinged
      * @return this object to allow chaining
      */
-    public static Ping onAddress(@NonNull InetAddress ia) {
+    public static Ping onAddress(InetAddress ia) {
         Ping ping = new Ping();
         ping.setAddress(ia);
         return ping;
@@ -59,33 +60,37 @@ public class Ping {
 
     /**
      * Set the timeout
+     *
      * @param timeOutMillis - the timeout for each ping in milliseconds
      * @return this object to allow chaining
      */
-    public Ping setTimeOutMillis(int timeOutMillis){
-        if (timeOutMillis<0) throw new IllegalArgumentException("Times cannot be less than 0");
+    public Ping setTimeOutMillis(int timeOutMillis) {
+        if (timeOutMillis < 0) throw new IllegalArgumentException("Times cannot be less than 0");
         this.timeOutMillis = timeOutMillis;
         return this;
     }
 
     /**
      * Set the delay between each ping
+     *
      * @param delayBetweenScansMillis - the timeout for each ping in milliseconds
      * @return this object to allow chaining
      */
-    public Ping setDelayMillis(int delayBetweenScansMillis){
-        if (delayBetweenScansMillis<0) throw new IllegalArgumentException("Delay cannot be less than 0");
+    public Ping setDelayMillis(int delayBetweenScansMillis) {
+        if (delayBetweenScansMillis < 0)
+            throw new IllegalArgumentException("Delay cannot be less than 0");
         this.delayBetweenScansMillis = delayBetweenScansMillis;
         return this;
     }
 
     /**
      * Set number of times to ping the address
+     *
      * @param noTimes - number of times, 0 = continuous
      * @return this object to allow chaining
      */
-    public Ping setTimes(int noTimes){
-        if (noTimes<0) throw new IllegalArgumentException("Times cannot be less than 0");
+    public Ping setTimes(int noTimes) {
+        if (noTimes < 0) throw new IllegalArgumentException("Times cannot be less than 0");
         this.times = noTimes;
         return this;
     }
@@ -96,6 +101,7 @@ public class Ping {
 
     /**
      * Set the address string which will be resolved to an address by resolveAddressString()
+     *
      * @param addressString - String of the address to be pinged
      */
     private void setAddressString(String addressString) {
@@ -108,7 +114,7 @@ public class Ping {
      * @throws UnknownHostException - if host cannot be found
      */
     private void resolveAddressString() throws UnknownHostException {
-        if (address == null && addressString !=null){
+        if (address == null && addressString != null) {
             address = InetAddress.getByName(addressString);
         }
     }
@@ -122,9 +128,10 @@ public class Ping {
 
     /**
      * Perform a synchronous ping and return a result, will ignore number of times.
-     *
+     * <p>
      * Note that this should be performed on a background thread as it will perform a network
      * request
+     *
      * @return - ping result
      */
     public PingResult doPing() throws UnknownHostException {
@@ -135,10 +142,11 @@ public class Ping {
 
     /**
      * Perform an asynchronous ping
+     *
      * @param pingListener - the listener to fire PingResults to.
      * @return - this so we can cancel if needed
      */
-    public Ping doPing(final PingListener pingListener){
+    public Ping doPing(final PingListener pingListener) {
 
         new Thread(new Runnable() {
             @Override
@@ -151,7 +159,7 @@ public class Ping {
                     return;
                 }
 
-                if (address == null){
+                if (address == null) {
                     pingListener.onError(new NullPointerException("Address is null"));
                     return;
                 }
@@ -166,24 +174,23 @@ public class Ping {
                 int noPings = times;
 
                 // times == 0 is the case that we can continuous scanning
-                while(noPings>0 || times == 0){
+                while (noPings > 0 || times == 0) {
                     PingResult pingResult = PingTools.doPing(address, timeOutMillis);
 
-                    if (pingListener!=null){
+                    if (pingListener != null) {
                         pingListener.onResult(pingResult);
                     }
 
                     // Update ping stats
                     pingsCompleted++;
 
-                    if (pingResult.hasError()){
+                    if (pingResult.hasError()) {
                         noLostPackets++;
-                    }
-                    else{
+                    } else {
                         float timeTaken = pingResult.getTimeTaken();
                         totalPingTime += timeTaken;
-                        if (maxPingTime == - 1 || timeTaken > maxPingTime) maxPingTime = timeTaken;
-                        if (minPingTime == - 1 || timeTaken < minPingTime) minPingTime = timeTaken;
+                        if (maxPingTime == -1 || timeTaken > maxPingTime) maxPingTime = timeTaken;
+                        if (minPingTime == -1 || timeTaken < minPingTime) minPingTime = timeTaken;
                     }
 
                     noPings--;
@@ -196,7 +203,7 @@ public class Ping {
                     }
                 }
 
-                if (pingListener!=null){
+                if (pingListener != null) {
                     pingListener.onFinished(new PingStats(address, pingsCompleted, noLostPackets, totalPingTime, minPingTime, maxPingTime));
                 }
             }

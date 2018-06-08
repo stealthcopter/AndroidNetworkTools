@@ -11,7 +11,7 @@ public class WakeOnLanTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalArgumentThrownOnInvalidIPaddressStr() throws Exception {
-        WakeOnLan.sendWakeOnLan((String)null, "00:04:20:06:55:1a", 9, 10000, 5);
+        WakeOnLan.sendWakeOnLan((String) null, "00:04:20:06:55:1a", 9, 10000, 5);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -1,7 +1,5 @@
 package com.stealthcopter.networktools.ping;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.net.InetAddress;
 
@@ -18,25 +16,23 @@ public class PingTools {
     /**
      * Perform a ping using the native ping tool and fall back to using java echo request
      * on failure.
-     * @param ia - address to ping
+     *
+     * @param ia            - address to ping
      * @param timeOutMillis - timeout in millisecdonds
      * @return - the ping results
      */
-    public static PingResult doPing(InetAddress ia, int timeOutMillis){
+    public static PingResult doPing(InetAddress ia, int timeOutMillis) {
 
         // Try native ping first
-        try{
+        try {
             return PingTools.doNativePing(ia, timeOutMillis);
-        } catch (InterruptedException e){
+        } catch (InterruptedException e) {
             PingResult pingResult = new PingResult(ia);
             pingResult.isReachable = false;
-            pingResult.error="Interrupted";
+            pingResult.error = "Interrupted";
             return pingResult;
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){
-        }
-
-        Log.v("AndroidNetworkTools", "Native ping failed, using java");
 
         // Fallback to java based ping
         return PingTools.doJavaPing(ia, timeOutMillis);
@@ -45,7 +41,8 @@ public class PingTools {
 
     /**
      * Perform a ping using the native ping binary
-     * @param ia - address to ping
+     *
+     * @param ia            - address to ping
      * @param timeOutMillis - timeout in millisecdonds
      * @return - the ping results
      * @throws IOException
@@ -60,21 +57,21 @@ public class PingTools {
      * ICMP <i>(ICMP ECHO REQUEST)</i>, falling back to a TCP connection
      * on port 7 (Echo) of the remote host.
      *
-     * @param ia - address to ping
+     * @param ia            - address to ping
      * @param timeOutMillis - timeout in millisecdonds
      * @return - the ping results
      */
-    public static PingResult doJavaPing(InetAddress ia, int timeOutMillis){
+    public static PingResult doJavaPing(InetAddress ia, int timeOutMillis) {
         PingResult pingResult = new PingResult(ia);
         try {
             long startTime = System.nanoTime();
             final boolean reached = ia.isReachable(timeOutMillis);
-            pingResult.timeTaken = (System.nanoTime()-startTime)/1e6f;
+            pingResult.timeTaken = (System.nanoTime() - startTime) / 1e6f;
             pingResult.isReachable = reached;
-            if (!reached) pingResult.error="Timed Out";
+            if (!reached) pingResult.error = "Timed Out";
         } catch (IOException e) {
-            pingResult.isReachable=false;
-            pingResult.error="IOException: "+e.getMessage();
+            pingResult.isReachable = false;
+            pingResult.error = "IOException: " + e.getMessage();
         }
         return pingResult;
     }

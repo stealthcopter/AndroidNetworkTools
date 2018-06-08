@@ -1,7 +1,5 @@
 package com.stealthcopter.networktools.ping;
 
-import android.text.TextUtils;
-
 import java.net.InetAddress;
 
 /**
@@ -15,27 +13,27 @@ public class PingResult {
     public String fullString;
     public String result;
 
-    public PingResult(InetAddress ia){
-        this.ia=ia;
+    public PingResult(InetAddress ia) {
+        this.ia = ia;
     }
 
-    public boolean isReachable(){
+    public boolean isReachable() {
         return isReachable;
     }
 
-    public boolean hasError(){
+    public boolean hasError() {
         return error != null;
     }
 
-    public float getTimeTaken(){
+    public float getTimeTaken() {
         return timeTaken;
     }
 
-    public String getError(){
+    public String getError() {
         return error;
     }
 
-    public InetAddress getAddress(){
+    public InetAddress getAddress() {
         return ia;
     }
 

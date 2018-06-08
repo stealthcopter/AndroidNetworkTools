@@ -14,7 +14,7 @@ public class PortScanTCP {
     private PortScanTCP() {
     }
 
-    public static PortInfo scanAddress(InetAddress ia, int portNo, int timeoutMillis){
+    public static PortInfo scanAddress(InetAddress ia, int portNo, int timeoutMillis) {
 
         PortInfo portInfo = new PortInfo(ia.getHostAddress(), portNo);
         portInfo.open = false;
@@ -27,9 +27,8 @@ public class PortScanTCP {
             portInfo.open = true;
         } catch (IOException e) {
             // Don't log anything as we are expecting a lot of these from closed ports.
-        }
-        finally {
-            if (s!=null){
+        } finally {
+            if (s != null) {
                 try {
                     s.close();
                 } catch (IOException e) {

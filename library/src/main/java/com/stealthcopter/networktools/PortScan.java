@@ -1,9 +1,5 @@
 package com.stealthcopter.networktools;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
-
 import com.stealthcopter.networktools.portscanning.PortScanTCP;
 
 import java.net.InetAddress;
@@ -34,36 +30,38 @@ public class PortScan {
     private static final int DEFAULT_THREADS_LOCALNETWORK = 50;
     private static final int DEFAULT_THREADS_REMOTE = 50;
 
-    @Nullable
     private PortListener portListener;
 
     // This class is not to be instantiated
     private PortScan() {
     }
 
-    public interface PortListener{
+    public interface PortListener {
         void onResult(int portNo, boolean open);
+
         void onFinished(ArrayList<Integer> openPorts);
     }
 
     /**
      * Set the address to ping
+     *
      * @param address - Address to be pinged
      * @return this object to allow chaining
      * @throws UnknownHostException - if no IP address for the
-     *               <code>host</code> could be found, or if a scope_id was specified
-     *               for a global IPv6 address.
+     *                              <code>host</code> could be found, or if a scope_id was specified
+     *                              for a global IPv6 address.
      */
-    public static PortScan onAddress(@NonNull String address) throws UnknownHostException {
+    public static PortScan onAddress(String address) throws UnknownHostException {
         return onAddress(InetAddress.getByName(address));
     }
 
     /**
      * Set the address to ping
+     *
      * @param ia - Address to be pinged
      * @return this object to allow chaining
      */
-    public static PortScan onAddress(@NonNull InetAddress ia) {
+    public static PortScan onAddress(InetAddress ia) {
         PortScan portScan = new PortScan();
         portScan.setAddress(ia);
         portScan.setDefaultThreadsAndTimeouts();
@@ -72,31 +70,31 @@ public class PortScan {
 
     /**
      * Sets the timeout for each port scanned
-     *
+     * <p>
      * If you raise the timeout you may want to consider increasing the thread count {@link #setNoThreads(int)} to compensate.
      * We can afford to have quite a high thread count as most of the time the thread is just sitting
      * idle and waiting for the socket to timeout.
      *
      * @param timeOutMillis - the timeout for each ping in milliseconds
-     * Recommendations:
-     *      Local host: 20 - 500 ms - can be very fast as request doesn't need to go over network
-     *      Local network 500 - 2500 ms
-     *      Remote Scan 2500+ ms
-     *
+     *                      Recommendations:
+     *                      Local host: 20 - 500 ms - can be very fast as request doesn't need to go over network
+     *                      Local network 500 - 2500 ms
+     *                      Remote Scan 2500+ ms
      * @return this object to allow chaining
      */
-    public PortScan setTimeOutMillis(int timeOutMillis){
-        if (timeOutMillis<0) throw new IllegalArgumentException("Timeout cannot be less than 0");
+    public PortScan setTimeOutMillis(int timeOutMillis) {
+        if (timeOutMillis < 0) throw new IllegalArgumentException("Timeout cannot be less than 0");
         this.timeOutMillis = timeOutMillis;
         return this;
     }
 
     /**
      * Scan the ports to scan
+     *
      * @param port - the port to scan
      * @return this object to allow chaining
      */
-    public PortScan setPort(int port){
+    public PortScan setPort(int port) {
         ports.clear();
         validatePort(port);
         ports.add(port);
@@ -105,13 +103,14 @@ public class PortScan {
 
     /**
      * Scan the ports to scan
+     *
      * @param ports - the ports to scan
      * @return this object to allow chaining
      */
-    public PortScan setPorts(ArrayList<Integer> ports){
+    public PortScan setPorts(ArrayList<Integer> ports) {
 
         // Check all ports are valid
-        for(Integer port : ports){
+        for (Integer port : ports) {
             validatePort(port);
         }
 
@@ -122,35 +121,36 @@ public class PortScan {
 
     /**
      * Scan the ports to scan
+     *
      * @param portString - the ports to scan (comma separated, hyphen denotes a range). For example:
-     *                               "21-23,25,45,53,80"
+     *                   "21-23,25,45,53,80"
      * @return this object to allow chaining
      */
-    public PortScan setPorts(String portString){
+    public PortScan setPorts(String portString) {
 
         ports.clear();
 
         ArrayList<Integer> ports = new ArrayList<>();
 
-        if (portString==null){
+        if (portString == null) {
             throw new IllegalArgumentException("Empty port string not allowed");
         }
 
-        portString = portString.substring(portString.indexOf(":")+1, portString.length());
+        portString = portString.substring(portString.indexOf(":") + 1, portString.length());
 
-        for (String x : portString.split(",")){
-            if (x.contains("-")){
+        for (String x : portString.split(",")) {
+            if (x.contains("-")) {
                 int start = Integer.parseInt(x.split("-")[0]);
                 int end = Integer.parseInt(x.split("-")[1]);
                 validatePort(start);
                 validatePort(end);
-                if (end<=start) throw new IllegalArgumentException("Start port cannot be greater than or equal to the end port");
+                if (end <= start)
+                    throw new IllegalArgumentException("Start port cannot be greater than or equal to the end port");
 
-                for (int j=start; j<=end;j++){
+                for (int j = start; j <= end; j++) {
                     ports.add(j);
                 }
-            }
-            else{
+            } else {
                 int start = Integer.parseInt(x);
                 validatePort(start);
                 ports.add(start);
@@ -164,18 +164,20 @@ public class PortScan {
 
     /**
      * Checks and throws exception if port is not valid
+     *
      * @param port - the port to validate
      */
-    private void validatePort(int port){
-        if (port<1) throw new IllegalArgumentException("Start port cannot be less than 1");
-        if (port>65535) throw new IllegalArgumentException("Start cannot be greater than 65535");
+    private void validatePort(int port) {
+        if (port < 1) throw new IllegalArgumentException("Start port cannot be less than 1");
+        if (port > 65535) throw new IllegalArgumentException("Start cannot be greater than 65535");
     }
 
     /**
      * Scan all privileged ports
+     *
      * @return this object to allow chaining
      */
-    public PortScan setPortsPrivileged(){
+    public PortScan setPortsPrivileged() {
         ports.clear();
         for (int i = 1; i < 1024; i++) {
             ports.add(i);
@@ -185,9 +187,10 @@ public class PortScan {
 
     /**
      * Scan all ports
+     *
      * @return this object to allow chaining
      */
-    public PortScan setPortsAll(){
+    public PortScan setPortsAll() {
         ports.clear();
         for (int i = 1; i < 65536; i++) {
             ports.add(i);
@@ -199,34 +202,31 @@ public class PortScan {
         this.address = address;
     }
 
-    private void setDefaultThreadsAndTimeouts(){
+    private void setDefaultThreadsAndTimeouts() {
         // Try and work out automatically what kind of host we are scanning
         // local host (this device) / local network / remote
-        if (IPTools.isIpAddressLocalhost(address)){
+        if (IPTools.isIpAddressLocalhost(address)) {
             // If we are scanning a the localhost set the timeout to be very short so we get faster results
             // This will be overridden if user calls setTimeoutMillis manually.
             timeOutMillis = TIMEOUT_LOCALHOST;
             noThreads = DEFAULT_THREADS_LOCALHOST;
-        }
-        else if (IPTools.isIpAddressLocalNetwork(address)){
+        } else if (IPTools.isIpAddressLocalNetwork(address)) {
             // Assume local network (not infallible)
             timeOutMillis = TIMEOUT_LOCALNETWORK;
             noThreads = DEFAULT_THREADS_LOCALNETWORK;
-        }
-        else{
+        } else {
             // Assume remote network timeouts
             timeOutMillis = TIMEOUT_REMOTE;
             noThreads = DEFAULT_THREADS_REMOTE;
         }
     }
 
-     /**
-      *
-      * @param noThreads set the number of threads to work with, note we default to a large number
-      *                  as these requests are network heavy not cpu heavy.
-      * @return self
-      * @throws IllegalAccessException - if no threads is less than 1
-      */
+    /**
+     * @param noThreads set the number of threads to work with, note we default to a large number
+     *                  as these requests are network heavy not cpu heavy.
+     * @return self
+     * @throws IllegalAccessException - if no threads is less than 1
+     */
     public PortScan setNoThreads(int noThreads) throws IllegalArgumentException {
         if (noThreads < 1) throw new IllegalArgumentException("Cannot have less than 1 thread");
         this.noThreads = noThreads;
@@ -242,9 +242,10 @@ public class PortScan {
 
     /**
      * Perform a synchronous port scan and return a list of open ports
+     *
      * @return - ping result
      */
-    public ArrayList<Integer> doScan(){
+    public ArrayList<Integer> doScan() {
 
         cancelled = false;
         openPortsFound.clear();
@@ -273,10 +274,11 @@ public class PortScan {
 
     /**
      * Perform an asynchronous port scan
+     *
      * @param portListener - the listener to fire portscan results to.
      * @return - this object so we can cancel the scan if needed
      */
-    public PortScan doScan(final PortListener portListener){
+    public PortScan doScan(final PortListener portListener) {
 
         this.portListener = portListener;
         openPortsFound.clear();
@@ -303,7 +305,7 @@ public class PortScan {
                     e.printStackTrace();
                 }
 
-                if (portListener!=null){
+                if (portListener != null) {
                     Collections.sort(openPortsFound);
                     portListener.onFinished(openPortsFound);
                 }
@@ -314,8 +316,8 @@ public class PortScan {
         return this;
     }
 
-    private synchronized void portScanned(int port, boolean open){
-        if (open){
+    private synchronized void portScanned(int port, boolean open) {
+        if (open) {
             openPortsFound.add(port);
         }
         if (portListener != null) {

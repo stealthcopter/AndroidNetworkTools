@@ -1,14 +1,11 @@
 package com.stealthcopter.networktools.ping;
 
-import android.util.Log;
-
 import com.stealthcopter.networktools.IPTools;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.util.regex.Pattern;
 
 /**
  * Created by mat on 09/12/15.
@@ -36,7 +33,7 @@ public class PingNative {
                 pingCommand = "ping6";
             } else if (!IPTools.isIPv4Address(address)) {
                 // Address doesn't look to be ipv4 or ipv6, but we could be mistaken
-                Log.w("AndroidNetworkTools", "Could not identify " + address + " as ipv4 or ipv6, assuming ipv4");
+
             }
         } else {
             // Not sure if getHostAddress ever returns null, but if it does, use the hostname as a fallback
@@ -98,7 +95,6 @@ public class PingNative {
      * @param s
      */
     public static PingResult getPingStats(PingResult pingResult, String s) {
-        Log.v("AndroidNetworkTools", "Ping String: " + s);
         String pingError;
         if (s.contains("0% packet loss")) {
             int start = s.indexOf("/mdev = ");

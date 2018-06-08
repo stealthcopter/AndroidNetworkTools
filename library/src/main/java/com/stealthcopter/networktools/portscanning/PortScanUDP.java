@@ -17,7 +17,7 @@ public class PortScanUDP {
     private PortScanUDP() {
     }
 
-    public static PortInfo scanAddress(InetAddress ia, int portNo, int timeoutMillis){
+    public static PortInfo scanAddress(InetAddress ia, int portNo, int timeoutMillis) {
 
         PortInfo portInfo = new PortInfo(ia.getHostAddress(), portNo);
         portInfo.open = false;

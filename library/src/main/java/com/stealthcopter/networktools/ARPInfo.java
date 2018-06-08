@@ -1,7 +1,5 @@
 package com.stealthcopter.networktools;
 
-import android.support.annotation.Nullable;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,7 +30,6 @@ public class ARPInfo {
      * @param ip - IP address to search for
      * @return the MAC from the ARP cache or null in format "01:23:45:67:89:ab"
      */
-    @Nullable
     public static String getMACFromIPAddress(String ip) {
         if (ip == null) {
             return null;
@@ -60,7 +57,6 @@ public class ARPInfo {
      * @param macAddress in format "01:23:45:67:89:ab" to search for
      * @return the IP address found or null in format "192.168.0.1"
      */
-    @Nullable
     public static String getIPAddressFromMAC(String macAddress) {
         if (macAddress == null) {
             return null;

@@ -1,7 +1,5 @@
 package com.stealthcopter.networktools.traceroute;
 
-import android.support.annotation.NonNull;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -12,44 +10,47 @@ public class Traceroute {
     private int timeOutMillis = 1000;
     private InetAddress address;
 
-    public interface OnTraceListener{
+    public interface OnTraceListener {
         void onTrace(TraceObj traceObj);
+
         void onError(String error);
     }
 
     boolean shouldStopTrace = false;
 
-    private Traceroute(){
+    private Traceroute() {
 
     }
 
     /**
      * Set the address to traceroute
+     *
      * @param address - Address to be traceroute
      * @return this object to allow chaining
      * @throws UnknownHostException - if no IP address for the
-     *               <code>host</code> could be found, or if a scope_id was specified
-     *               for a global IPv6 address.
+     *                              <code>host</code> could be found, or if a scope_id was specified
+     *                              for a global IPv6 address.
      */
-    public static Traceroute onAddress(@NonNull String address) throws UnknownHostException {
+    public static Traceroute onAddress(String address) throws UnknownHostException {
         return onAddress(InetAddress.getByName(address));
     }
 
     /**
      * Set the address to traceroute
+     *
      * @param ia - Address to be traced
      * @return this object to allow chaining
      */
-    public static Traceroute onAddress(@NonNull InetAddress ia) {
+    public static Traceroute onAddress(InetAddress ia) {
         Traceroute traceroute = new Traceroute();
         traceroute.address = ia;
         return traceroute;
     }
 
-        /**
-         * Cancel a running traceroute
-         */
-    public void cancel(){
+    /**
+     * Cancel a running traceroute
+     */
+    public void cancel() {
         shouldStopTrace = true;
     }
 
@@ -58,19 +59,17 @@ public class Traceroute {
      * this will be converted into seconds, so minimum of 1000ms and increasing in increments of 1000
      *
      * @param timeOutMillis - the timeout for each ping in milliseconds
-     * Recommendations: 3
-     *
+     *                      Recommendations: 3
      * @return this object to allow chaining
      */
-    public Traceroute setTimeOutMillis(int timeOutMillis){
-        if (timeOutMillis<0) throw new IllegalArgumentException("Timeout cannot be less than 0");
+    public Traceroute setTimeOutMillis(int timeOutMillis) {
+        if (timeOutMillis < 0) throw new IllegalArgumentException("Timeout cannot be less than 0");
 
         this.timeOutMillis = Math.min(1000, timeOutMillis);
         return this;
     }
 
     /**
-     *
      * @param onTraceListener - the listener to fire portscan results to.
      * @return - this object so we can cancel the scan if needed
      */

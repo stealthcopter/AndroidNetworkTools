@@ -13,8 +13,8 @@ public class PingStats {
     private final float minTimeTaken;
     private final float maxTimeTaken;
 
-    public PingStats(InetAddress ia, long noPings, long packetsLost, float totalTimeTaken, float minTimeTaken, float maxTimeTaken){
-        this.ia=ia;
+    public PingStats(InetAddress ia, long noPings, long packetsLost, float totalTimeTaken, float minTimeTaken, float maxTimeTaken) {
+        this.ia = ia;
         this.noPings = noPings;
         this.packetsLost = packetsLost;
         this.averageTimeTaken = totalTimeTaken / noPings;
@@ -22,7 +22,7 @@ public class PingStats {
         this.maxTimeTaken = maxTimeTaken;
     }
 
-    public InetAddress getAddress(){
+    public InetAddress getAddress() {
         return ia;
     }
 

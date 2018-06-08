@@ -13,11 +13,11 @@ import static org.junit.Assert.assertTrue;
 
 public class MACToolsTest {
 
-    String[] getInvalidMACAddresses(){
+    String[] getInvalidMACAddresses() {
         return new String[]{null, "beepbeep", "nope", "hello", "00-15-E9-2B-99+3C", "0G-15-E9-2B-99-3C"};
     }
 
-    String[] getValidMACAddresses(){
+    String[] getValidMACAddresses() {
         return new String[]{"00:00:00:00:00:00", "00-15-E9-2B-99-3C", "00:15:E9:2B:99:3C", "00-15-e9-2b-99-3c"};
     }
 
@@ -30,7 +30,7 @@ public class MACToolsTest {
 
     @Test
     public void testInvalidMACAddresses() {
-        for (String macAddress: getInvalidMACAddresses()) {
+        for (String macAddress : getInvalidMACAddresses()) {
             assertFalse(MACTools.isValidMACAddress(macAddress));
         }
     }

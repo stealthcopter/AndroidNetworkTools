@@ -11,5 +11,7 @@ public class PortInfo {
         this.ip = ip;
     }
 
-    public boolean isOpen(){return open;}
+    public boolean isOpen() {
+        return open;
+    }
 }
