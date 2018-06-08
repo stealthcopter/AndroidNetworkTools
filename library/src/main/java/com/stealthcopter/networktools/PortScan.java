@@ -66,26 +66,7 @@ public class PortScan {
     public static PortScan onAddress(@NonNull InetAddress ia) {
         PortScan portScan = new PortScan();
         portScan.setAddress(ia);
-
-        // Try and work out automatically what kind of host we are scanning
-        // local host (this device) / local network / remote
-        if (IPTools.isIpAddressLocalhost(ia)){
-            // If we are scanning a the localhost set the timeout to be very short so we get faster results
-            // This will be overridden if user calls setTimeoutMillis manually.
-            portScan.timeOutMillis = TIMEOUT_LOCALHOST;
-            portScan.noThreads = DEFAULT_THREADS_LOCALHOST;
-        }
-        else if (IPTools.isIpAddressLocalNetwork(ia)){
-            // Assume local network (not infallible)
-            portScan.timeOutMillis = TIMEOUT_LOCALNETWORK;
-            portScan.noThreads = DEFAULT_THREADS_LOCALNETWORK;
-        }
-        else{
-            // Assume remote network timeouts
-            portScan.timeOutMillis = TIMEOUT_REMOTE;
-            portScan.noThreads = DEFAULT_THREADS_REMOTE;
-        }
-
+        portScan.setDefaultThreadsAndTimeouts();
         return portScan;
     }
 
@@ -218,6 +199,26 @@ public class PortScan {
         this.address = address;
     }
 
+    private void setDefaultThreadsAndTimeouts(){
+        // Try and work out automatically what kind of host we are scanning
+        // local host (this device) / local network / remote
+        if (IPTools.isIpAddressLocalhost(address)){
+            // If we are scanning a the localhost set the timeout to be very short so we get faster results
+            // This will be overridden if user calls setTimeoutMillis manually.
+            timeOutMillis = TIMEOUT_LOCALHOST;
+            noThreads = DEFAULT_THREADS_LOCALHOST;
+        }
+        else if (IPTools.isIpAddressLocalNetwork(address)){
+            // Assume local network (not infallible)
+            timeOutMillis = TIMEOUT_LOCALNETWORK;
+            noThreads = DEFAULT_THREADS_LOCALNETWORK;
+        }
+        else{
+            // Assume remote network timeouts
+            timeOutMillis = TIMEOUT_REMOTE;
+            noThreads = DEFAULT_THREADS_REMOTE;
+        }
+    }
 
      /**
       *
@@ -226,7 +227,7 @@ public class PortScan {
       * @return self
       * @throws IllegalAccessException - if no threads is less than 1
       */
-    public PortScan setNoThreads(int noThreads) throws IllegalAccessException {
+    public PortScan setNoThreads(int noThreads) throws IllegalArgumentException {
         if (noThreads < 1) throw new IllegalArgumentException("Cannot have less than 1 thread");
         this.noThreads = noThreads;
         return this;

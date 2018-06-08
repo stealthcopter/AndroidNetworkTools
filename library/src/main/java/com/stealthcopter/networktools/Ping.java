@@ -21,8 +21,10 @@ public class Ping {
     public interface PingListener{
         void onResult(PingResult pingResult);
         void onFinished(PingStats pingStats);
+        void onError(Exception e);
     }
 
+    private String addressString = null;
     private InetAddress address;
     private int timeOutMillis = 1000;
     private int delayBetweenScansMillis = 0;
@@ -31,14 +33,16 @@ public class Ping {
 
     /**
      * Set the address to ping
+     *
+     * Note that a lookup is not performed here so that we do not accidentally perform a network
+     * request on the UI thread.
+     *
      * @param address - Address to be pinged
      * @return this object to allow chaining
-     * @throws UnknownHostException
      */
-    public static Ping onAddress(@NonNull String address) throws UnknownHostException {
+    public static Ping onAddress(@NonNull String address) {
         Ping ping = new Ping();
-        InetAddress ia = InetAddress.getByName(address);
-        ping.setAddress(ia);
+        ping.setAddressString(address);
         return ping;
     }
 
@@ -91,6 +95,25 @@ public class Ping {
     }
 
     /**
+     * Set the address string which will be resolved to an address by resolveAddressString()
+     * @param addressString - String of the address to be pinged
+     */
+    private void setAddressString(String addressString) {
+        this.addressString = addressString;
+    }
+
+    /**
+     * Parses the addressString to an address
+     *
+     * @throws UnknownHostException - if host cannot be found
+     */
+    private void resolveAddressString() throws UnknownHostException {
+        if (address == null && addressString !=null){
+            address = InetAddress.getByName(addressString);
+        }
+    }
+
+    /**
      * Cancel a running ping
      */
     public void cancel() {
@@ -99,10 +122,14 @@ public class Ping {
 
     /**
      * Perform a synchronous ping and return a result, will ignore number of times.
+     *
+     * Note that this should be performed on a background thread as it will perform a network
+     * request
      * @return - ping result
      */
-    public PingResult doPing(){
+    public PingResult doPing() throws UnknownHostException {
         cancelled = false;
+        resolveAddressString();
         return PingTools.doPing(address, timeOutMillis);
     }
 
@@ -116,6 +143,18 @@ public class Ping {
         new Thread(new Runnable() {
             @Override
             public void run() {
+
+                try {
+                    resolveAddressString();
+                } catch (UnknownHostException e) {
+                    pingListener.onError(e);
+                    return;
+                }
+
+                if (address == null){
+                    pingListener.onError(new NullPointerException("Address is null"));
+                    return;
+                }
 
                 long pingsCompleted = 0;
                 long noLostPackets = 0;

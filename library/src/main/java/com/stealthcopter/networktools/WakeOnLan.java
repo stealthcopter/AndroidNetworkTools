@@ -1,17 +1,20 @@
 package com.stealthcopter.networktools;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 /**
  * Created by mat on 09/12/15.
- *
+ * <p>
  * Tested this and it wakes my computer up :)
- *
+ * <p>
  * Ref: http://www.jibble.org/wake-on-lan/
  */
 public class WakeOnLan {
@@ -20,35 +23,189 @@ public class WakeOnLan {
     public static final int DEFAULT_TIMEOUT_MILLIS = 10000;
     public static final int DEFAULT_NO_PACKETS = 5;
 
+    private String ipStr;
+    private InetAddress inetAddress;
+    private String macStr;
+    private int port = DEFAULT_PORT;
+    private int timeoutMillis = DEFAULT_TIMEOUT_MILLIS;
+    private int noPackets = DEFAULT_NO_PACKETS;
+
+    public interface WakeOnLanListener{
+        void onSuccess();
+        void onError(Exception e);
+    }
+
     // This class is not to be instantiated
     private WakeOnLan() {
     }
 
     /**
+     * Set the ip address to wake
+     *
+     * @param ipStr - IP Address to be woke
+     * @return this object to allow chaining
+     */
+    public static WakeOnLan onIp(String ipStr){
+        WakeOnLan wakeOnLan = new WakeOnLan();
+        wakeOnLan.ipStr = ipStr;
+        return wakeOnLan;
+    }
+
+
+    /**
+     * Set the address to wake
+     *
+     * @param inetAddress - InetAddress to be woke
+     * @return this object to allow chaining
+     */
+    public static WakeOnLan onAddress(InetAddress inetAddress){
+        WakeOnLan wakeOnLan = new WakeOnLan();
+        wakeOnLan.inetAddress = inetAddress;
+        return wakeOnLan;
+    }
+
+
+    /**
+     * Set the mac address of the device to wake
+     *
+     * @param macStr - The MAC address of the device to be woken (Required)
+     * @return this object to allow chaining
+     */
+    public WakeOnLan withMACAddress(String macStr){
+        if (macStr == null) throw new NullPointerException("MAC Cannot be null");
+        this.macStr = macStr;
+        return this;
+    }
+
+
+    /**
+     * Sets the port to send the packet to, default is 9
+     *
+     * @param port - the port for the wol packet
+     * @return this object to allow chaining
+     */
+    public WakeOnLan setPort(int port){
+        if (port <= 0 || port > 65535) throw new IllegalArgumentException("Invalid port " + port);
+        this.port = port;
+        return this;
+    }
+
+
+    /**
+     * Sets the number of packets to send, this is to overcome the flakiness of networks
+     *
+     * @param noPackets - the numbe of packets to send
+     * @return this object to allow chaining
+     */
+    public WakeOnLan setNoPackets(int noPackets){
+        if (noPackets <= 0) throw new IllegalArgumentException("Invalid number of packets to send " + noPackets);
+        this.noPackets = noPackets;
+        return this;
+    }
+
+    /**
+     * Sets the number milliseconds for the timeout on the socket send
+     *
+     * @param timeoutMillis - the timeout in milliseconds
+     * @return this object to allow chaining
+     */
+    public WakeOnLan setTimeout(int timeoutMillis){
+        if (timeoutMillis <= 0) throw new IllegalArgumentException("Timeout cannot be less than zero");
+        this.timeoutMillis = timeoutMillis;
+        return this;
+    }
+
+
+    /**
+     * Synchronous call of the wake method. Note that this is a network request and should not be
+     * performed on the UI thread
+     *
+     * @throws IOException - Thrown from socket errors
+     */
+    public void wake() throws IOException {
+
+        if (ipStr == null && inetAddress == null){
+            throw new IllegalArgumentException("You must declare ip address or supply an inetaddress");
+        }
+
+        if (macStr == null){
+            throw new NullPointerException("You did not supply a mac address with withMac(...)");
+        }
+
+        if (ipStr != null){
+            sendWakeOnLan(ipStr, macStr, port, timeoutMillis, noPackets);
+        }
+        else{
+            sendWakeOnLan(inetAddress, macStr, port, timeoutMillis, noPackets);
+        }
+    }
+
+
+    /**
+     * Asynchronous call of the wake method. This will be performed on the background thread
+     * and optionally fire a listener when complete, or when an error occurs
+     *
+     */
+    public void wake(@Nullable final WakeOnLanListener wakeOnLanListener){
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    wake();
+                    if (wakeOnLanListener != null) wakeOnLanListener.onSuccess();
+                }
+                catch (IOException e){
+                    if (wakeOnLanListener != null) wakeOnLanListener.onError(e);
+                }
+
+            }
+        });
+
+        thread.start();
+    }
+
+    /**
      * Send a Wake-On-Lan packet to port 9 using default timeout of 10s
-     * @param ipStr - IP String to send to
+     *
+     * @param ipStr  - IP String to send to
      * @param macStr - MAC address to wake up
      */
-    public static void sendWakeOnLan(@NonNull String ipStr, @NonNull String macStr) throws IOException, IllegalArgumentException {
+    public static void sendWakeOnLan(@NonNull String ipStr, @NonNull String macStr) throws IllegalArgumentException, IOException {
         sendWakeOnLan(ipStr, macStr, DEFAULT_PORT, DEFAULT_TIMEOUT_MILLIS, DEFAULT_NO_PACKETS);
     }
 
     /**
      * Send a Wake-On-Lan packet
-     * @param ipStr - IP String to send to
-     * @param macStr - MAC address to wake up
-     * @param port - port to send packet to
+     *
+     * @param ipStr         - IP String to send wol packet to
+     * @param macStr        - MAC address to wake up
+     * @param port          - port to send packet to
      * @param timeoutMillis - timeout (millis)
-     * @param packets - number of packets to send
+     * @param packets       - number of packets to send
      */
-    public static void sendWakeOnLan(@NonNull String ipStr, @NonNull String macStr, int port, int timeoutMillis, int packets) throws IOException, IllegalArgumentException {
+    public static void sendWakeOnLan(@NonNull final String ipStr, @NonNull final String macStr, final int port, final int timeoutMillis, final int packets) throws IllegalArgumentException, IOException {
+        InetAddress address = InetAddress.getByName(ipStr);
+        sendWakeOnLan(address, macStr, port, timeoutMillis, packets);
+    }
 
-        if (ipStr == null) throw new IllegalArgumentException("Ip Address cannot be null");
+    /**
+     * Send a Wake-On-Lan packet
+     *
+     * @param address         - InetAddress to send wol packet to
+     * @param macStr        - MAC address to wake up
+     * @param port          - port to send packet to
+     * @param timeoutMillis - timeout (millis)
+     * @param packets       - number of packets to send
+     */
+    public static void sendWakeOnLan(@NonNull final InetAddress address, @NonNull final String macStr, final int port, final int timeoutMillis, final int packets) throws IllegalArgumentException, IOException {
+        if (address == null) throw new IllegalArgumentException("Address cannot be null");
         if (macStr == null) throw new IllegalArgumentException("MAC Address cannot be null");
-        if (port<=0 || port>65535) throw new IllegalArgumentException("Invalid port "+port);
-        if (packets<=0) throw new IllegalArgumentException("Invalid number of packets to send "+packets);
+        if (port <= 0 || port > 65535) throw new IllegalArgumentException("Invalid port " + port);
+        if (packets <= 0)
+            throw new IllegalArgumentException("Invalid number of packets to send " + packets);
 
-        byte[] macBytes = getMacBytes(macStr);
+        byte[] macBytes = MACTools.getMacBytes(macStr);
         byte[] bytes = new byte[6 + 16 * macBytes.length];
         for (int i = 0; i < 6; i++) {
             bytes[i] = (byte) 0xff;
@@ -56,8 +213,6 @@ public class WakeOnLan {
         for (int i = 6; i < bytes.length; i += macBytes.length) {
             System.arraycopy(macBytes, 0, bytes, i, macBytes.length);
         }
-
-        InetAddress address = InetAddress.getByName(ipStr);
 
         DatagramPacket packet = new DatagramPacket(bytes, bytes.length, address, port);
 
@@ -72,30 +227,8 @@ public class WakeOnLan {
         }
     }
 
-        /**
-         * Convert a MAC string to bytes
-         * @param macStr - MAC string
-         * @return - MAC formatted in bytes
-         * @throws IllegalArgumentException
-         */
-    private static byte[] getMacBytes(@NonNull String macStr) throws IllegalArgumentException {
 
-        if (macStr==null) throw new IllegalArgumentException("Mac Address cannot be null");
 
-        byte[] bytes = new byte[6];
-        String[] hex = macStr.split("(\\:|\\-)");
-        if (hex.length != 6) {
-            throw new IllegalArgumentException("Invalid MAC address.");
-        }
-        try {
-            for (int i = 0; i < 6; i++) {
-                bytes[i] = (byte) Integer.parseInt(hex[i], 16);
-            }
-        }
-        catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Invalid hex digit in MAC address.");
-        }
-        return bytes;
-    }
+
 
 }
