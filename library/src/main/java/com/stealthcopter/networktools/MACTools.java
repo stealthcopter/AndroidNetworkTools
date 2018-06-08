@@ -24,7 +24,7 @@ public class MACTools {
      *               eg: "01:23:45:67:89:AB:CD:EF" or "01-23-45-67-89-AB-CD-EF"
      */
     public static boolean isValidMACAddress(final String macAddress) {
-        return PATTERN_MAC.matcher(macAddress).matches();
+        return macAddress != null && PATTERN_MAC.matcher(macAddress).matches();
     }
 
 

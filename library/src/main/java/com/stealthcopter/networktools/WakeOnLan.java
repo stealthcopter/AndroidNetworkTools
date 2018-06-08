@@ -185,6 +185,7 @@ public class WakeOnLan {
      * @param packets       - number of packets to send
      */
     public static void sendWakeOnLan(@NonNull final String ipStr, @NonNull final String macStr, final int port, final int timeoutMillis, final int packets) throws IllegalArgumentException, IOException {
+        if (ipStr == null) throw new IllegalArgumentException("Address cannot be null");
         InetAddress address = InetAddress.getByName(ipStr);
         sendWakeOnLan(address, macStr, port, timeoutMillis, packets);
     }
