@@ -152,6 +152,11 @@ public class MainActivity extends AppCompatActivity {
                 appendResultsText(String.format("Min/Avg/Max Time: %.2f/%.2f/%.2f ms",
                         pingStats.getMinTimeTaken(), pingStats.getAverageTimeTaken(), pingStats.getMaxTimeTaken()));
             }
+
+            @Override
+            public void onError(Exception e) {
+                // TODO: STUB METHOD
+            }
         });
 
     }
