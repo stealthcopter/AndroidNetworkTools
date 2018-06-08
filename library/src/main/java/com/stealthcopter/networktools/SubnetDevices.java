@@ -106,7 +106,7 @@ public class SubnetDevices {
      * @return self
      * @throws IllegalAccessException
      */
-    public SubnetDevices setNoThreads(int noThreads) {
+    public SubnetDevices setNoThreads(int noThreads) throws IllegalArgumentException {
         if (noThreads < 1) throw new IllegalArgumentException("Cannot have less than 1 thread");
         this.noThreads = noThreads;
         return this;
