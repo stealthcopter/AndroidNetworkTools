@@ -1,7 +1,9 @@
 package com.stealthcopter.networktools;
 
 import org.junit.Test;
+import org.mockito.internal.matchers.Null;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -33,4 +35,26 @@ public class MACToolsTest {
         }
     }
 
+    @Test
+    public void testMACGetBytes() {
+        byte[] bytes = MACTools.getMacBytes("01:02:03:04:05:06");
+
+        assertEquals(bytes[0], 0x01);
+        assertEquals(bytes[1], 0x02);
+        assertEquals(bytes[2], 0x03);
+        assertEquals(bytes[3], 0x04);
+        assertEquals(bytes[4], 0x05);
+        assertEquals(bytes[5], 0x06);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMACGetBytesThrowsNull() {
+        MACTools.getMacBytes(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testMACGetBytesThrowInvalidMac() {
+        MACTools.getMacBytes("00:00:00");
+    }
 }
