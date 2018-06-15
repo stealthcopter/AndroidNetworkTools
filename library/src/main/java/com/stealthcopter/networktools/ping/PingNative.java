@@ -101,7 +101,6 @@ public class PingNative {
             int end = s.indexOf(" ms\n", start);
             pingResult.fullString = s;
             if (start == -1 || end == -1) {
-                // TODO: We failed at parsing, maybe we should fix ;)
                 pingError = "Error: " + s;
             } else {
                 s = s.substring(start + 8, end);
