@@ -4,20 +4,30 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Traceroute class
+ *
+ * Idea: Use nmap if available..
+ */
 public class Traceroute {
 
+    private int maxHops = 30;
     private int timeOutMillis = 1000;
     private InetAddress address;
+    private boolean shouldStopTrace = false;
+    private ArrayList<TraceObj> traceObjs;
+    private OnTraceListener onTraceListener;
 
     public interface OnTraceListener {
         void onTrace(TraceObj traceObj);
-
+        void onFinishTrace(List<TraceObj> traceObjs);
         void onError(String error);
     }
 
-    boolean shouldStopTrace = false;
-
+    // This class is not to be instantiated
     private Traceroute() {
 
     }
@@ -64,8 +74,20 @@ public class Traceroute {
      */
     public Traceroute setTimeOutMillis(int timeOutMillis) {
         if (timeOutMillis < 0) throw new IllegalArgumentException("Timeout cannot be less than 0");
-
         this.timeOutMillis = Math.min(1000, timeOutMillis);
+        return this;
+    }
+
+    /**
+     * Sets the maximum number of hops allowed
+     *
+     * @param hops - the maximum number of hops
+     *
+     * @return this object to allow chaining
+     */
+    public Traceroute setMaxHops(int hops) {
+        if (hops < 1) throw new IllegalArgumentException("Hops cannot be less than 1");
+        this.maxHops = hops;
         return this;
     }
 
@@ -75,14 +97,24 @@ public class Traceroute {
      */
     public void traceRoute(final OnTraceListener onTraceListener) {
 
+        this.onTraceListener = onTraceListener;
+
+        // If
+
+
+        // TODO: Chunk in a thread
+
+        traceObjs = new ArrayList<>();
+
         int hops = 0;
 
         try {
 
-            for (int i = 1; i <= 30; i++) {
+            for (int i = 1; i <= maxHops; i++) {
 
                 if (shouldStopTrace) {
                     shouldStopTrace = false;
+                    finishTrace();
                     return;
                 }
 
@@ -101,7 +133,7 @@ public class Traceroute {
                 if (exit < 2) {
                     InputStreamReader reader = new InputStreamReader(proc.getInputStream());
                     BufferedReader buffer = new BufferedReader(reader);
-                    String line = "";
+                    String line;
                     while ((line = buffer.readLine()) != null) {
                         echo.append(line);
                     }
@@ -110,9 +142,9 @@ public class Traceroute {
 
                     if (str.contains("Time to live exceeded")) {
 
-                        final TraceObj traceObj = new TraceObj();
-                        traceObj.address = str.substring(str.indexOf("data.From ") + "data.From ".length(), str.indexOf("icmp_seq") - 1).replace(":", "");
+                        TraceObj traceObj = new TraceObj();
                         traceObj.fullString = str;
+                        traceObj.address = str.substring(str.indexOf("data.From ") + "data.From ".length(), str.indexOf("icmp_seq") - 1).replace(":", "");
                         if (traceObj.address.contains(" (")) {
                             traceObj.hostname = traceObj.address.substring(0, traceObj.address.indexOf(" ("));
                             traceObj.ip = traceObj.address.substring(traceObj.address.indexOf(" (") + 2, traceObj.address.length() - 1);
@@ -121,20 +153,18 @@ public class Traceroute {
                         }
                         traceObj.hop = hops++;
 
+                        addTraceObj(traceObj);
+
                         if (shouldStopTrace) {
                             // Stop before possibly doing activity_ping.
-                            onTraceListener.onTrace(traceObj);
                             shouldStopTrace = false;
                             return;
                         }
-
-                        onTraceListener.onTrace(traceObj);
                     }
+                    else if (!str.contains("100% packet loss")) {
+                        // Keep going if it's a route, or if we lost all our packets
 
-                    // Keep going if it's a route, or if we lost all our packets
-                    if (!str.contains("Time to live exceeded") && !str.contains("100% packet loss")) {
-
-                        final TraceObj traceObj = new TraceObj();
+                        TraceObj traceObj = new TraceObj();
 
                         traceObj.address = str.substring(str.indexOf("bytes of data.64 bytes from ") + "bytes of data.64 bytes from ".length(), str.indexOf("icmp_seq") - 1).replace(":", "");
                         if (traceObj.address.contains(" (")) {
@@ -148,7 +178,8 @@ public class Traceroute {
                         traceObj.isTargetDestination = true;
                         traceObj.time = str.substring(str.indexOf("time="), str.indexOf("ms", str.indexOf("time=")));
 
-                        onTraceListener.onTrace(traceObj);
+                        addTraceObj(traceObj);
+                        finishTrace();
                         return;
                     }
 
@@ -160,7 +191,14 @@ public class Traceroute {
         } catch (Exception e) {
             onTraceListener.onError("Native ping command failed");
         }
+    }
 
+    private void addTraceObj(TraceObj traceObj){
+        traceObjs.add(traceObj);
+        onTraceListener.onTrace(traceObj);
+    }
+    private void finishTrace(){
+        onTraceListener.onFinishTrace(traceObjs);
     }
 
 }

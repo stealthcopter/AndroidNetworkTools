@@ -1,8 +1,6 @@
 package com.stealthcopter.networktools.traceroute;
 
-import com.stealthcopter.networktools.ping.PingResult;
-
-class TraceObj {
+public class TraceObj {
     public String address;
     public String fullString;
     public String hostname;

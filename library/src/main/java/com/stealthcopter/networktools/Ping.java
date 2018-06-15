@@ -12,15 +12,23 @@ import java.net.UnknownHostException;
  */
 public class Ping {
 
+    // Only try ping using the java method
+    public static final int PING_JAVA = 0;
+
+    // Only try ping using the native method (will only work if native ping binary is found)
+    public static final int PING_NATIVE = 1;
+
+    // Use a hybrid ping that will attempt to use native binary but fallback to using java method
+    // if it's not found.
+    public static final int PING_HYBRID = 2;
+
     // This class is not to be instantiated
     private Ping() {
     }
 
     public interface PingListener {
         void onResult(PingResult pingResult);
-
         void onFinished(PingStats pingStats);
-
         void onError(Exception e);
     }
 
