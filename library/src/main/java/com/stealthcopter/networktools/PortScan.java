@@ -70,7 +70,7 @@ public class PortScan {
 
     /**
      * Sets the timeout for each port scanned
-     * <p>
+     *
      * If you raise the timeout you may want to consider increasing the thread count {@link #setNoThreads(int)} to compensate.
      * We can afford to have quite a high thread count as most of the time the thread is just sitting
      * idle and waiting for the socket to timeout.

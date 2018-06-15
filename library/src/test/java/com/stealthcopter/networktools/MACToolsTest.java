@@ -39,12 +39,12 @@ public class MACToolsTest {
     public void testMACGetBytes() {
         byte[] bytes = MACTools.getMacBytes("01:02:03:04:05:06");
 
-        assertEquals(bytes[0], 0x01);
-        assertEquals(bytes[1], 0x02);
-        assertEquals(bytes[2], 0x03);
-        assertEquals(bytes[3], 0x04);
-        assertEquals(bytes[4], 0x05);
-        assertEquals(bytes[5], 0x06);
+        assertEquals(0x01, bytes[0]);
+        assertEquals(0x02, bytes[1]);
+        assertEquals(0x03, bytes[2]);
+        assertEquals(0x04, bytes[3]);
+        assertEquals(0x05, bytes[4]);
+        assertEquals(0x06, bytes[5]);
     }
 
 

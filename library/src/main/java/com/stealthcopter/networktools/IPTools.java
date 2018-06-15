@@ -90,7 +90,7 @@ public class IPTools {
 
     /**
      * Check if the provided ip address refers to the localhost
-     * <p>
+     *
      * https://stackoverflow.com/a/2406819/315998
      *
      * @param addr - address to check
@@ -113,7 +113,7 @@ public class IPTools {
 
     /**
      * Check if the provided ip address refers to the localhost
-     * <p>
+     *
      * https://stackoverflow.com/a/2406819/315998
      *
      * @param addr - address to check

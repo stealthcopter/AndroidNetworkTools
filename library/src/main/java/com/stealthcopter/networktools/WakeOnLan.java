@@ -7,9 +7,9 @@ import java.net.InetAddress;
 
 /**
  * Created by mat on 09/12/15.
- * <p>
+ *
  * Tested this and it wakes my computer up :)
- * <p>
+ *
  * Ref: http://www.jibble.org/wake-on-lan/
  */
 public class WakeOnLan {

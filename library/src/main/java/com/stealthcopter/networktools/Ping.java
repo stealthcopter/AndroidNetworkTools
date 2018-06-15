@@ -33,7 +33,7 @@ public class Ping {
 
     /**
      * Set the address to ping
-     * <p>
+     *
      * Note that a lookup is not performed here so that we do not accidentally perform a network
      * request on the UI thread.
      *
@@ -128,7 +128,7 @@ public class Ping {
 
     /**
      * Perform a synchronous ping and return a result, will ignore number of times.
-     * <p>
+     *
      * Note that this should be performed on a background thread as it will perform a network
      * request
      *

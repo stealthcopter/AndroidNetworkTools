@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * Created by mat on 03/11/17.
  */
 public class SubnetDevices {
-    private int noThreads = 255;
+    private int noThreads = 100;
 
     private ArrayList<String> addresses;
     private ArrayList<Device> devicesFound;
