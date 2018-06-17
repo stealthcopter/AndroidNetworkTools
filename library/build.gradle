@@ -1,25 +1,12 @@
-apply plugin: 'com.android.library'
+apply plugin: 'java'
+apply plugin: 'maven'
 
-android {
-  compileSdkVersion compileSdkVer
-  buildToolsVersion buildToolsVer
-
-  defaultConfig {
-    minSdkVersion minSdkVer
-    targetSdkVersion targetSdkVer
-    versionCode 13
-    versionName "0.3.08"
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
-  }
-}
+group = 'com.github.stealthcopter'
 
 dependencies {
   testImplementation 'junit:junit:4.12'
   testImplementation 'org.mockito:mockito-core:2.10.0'
-  provided 'com.android.support:appcompat-v7:27.1.1'
 }
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"

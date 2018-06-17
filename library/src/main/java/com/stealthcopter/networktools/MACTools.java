@@ -1,7 +1,5 @@
 package com.stealthcopter.networktools;
 
-import android.support.annotation.NonNull;
-
 import java.util.regex.Pattern;
 
 public class MACTools {
@@ -19,9 +17,8 @@ public class MACTools {
      * Validates a provided MAC address
      *
      * @param macAddress - the MAC address to check
-     *
      * @return - true if it is valid MAC address in IEEE802 format (either hyphen or colon seperated)
-     *               eg: "01:23:45:67:89:AB:CD:EF" or "01-23-45-67-89-AB-CD-EF"
+     * eg: "01:23:45:67:89:AB" or "01-23-45-67-89-AB"
      */
     public static boolean isValidMACAddress(final String macAddress) {
         return macAddress != null && PATTERN_MAC.matcher(macAddress).matches();
@@ -32,12 +29,11 @@ public class MACTools {
      * Convert a MAC string to bytes
      *
      * @param macStr - MAC string in IEEE802 format (either hyphen or colon seperated)
-     *               eg: "01:23:45:67:89:AB:CD:EF" or "01-23-45-67-89-AB-CD-EF"
-     *
+     *               eg: "01:23:45:67:89:AB" or "01-23-45-67-89-AB"
      * @return - MAC formatted in bytes
      * @throws IllegalArgumentException - if mac address is invalid
      */
-    public static byte[] getMacBytes(@NonNull String macStr) throws IllegalArgumentException {
+    public static byte[] getMacBytes(String macStr) throws IllegalArgumentException {
 
         if (macStr == null) throw new IllegalArgumentException("Mac Address cannot be null");
 
