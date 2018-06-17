@@ -51,14 +51,14 @@ Requires internet permission (obviously...)
 
 ### Port Scanning
 
-A simple java based TCP port scanner, fast and easy to use. By default it will try and guess the best timeout and threads to use while scanning depending on if the address looks like localhost, local network or remote. You can override these yourself by calling setNoThreads() and setTimeoutMillis()
+A simple java based TCP / UDP port scanner, fast and easy to use. By default it will try and guess the best timeout and threads to use while scanning depending on if the address looks like localhost, local network or remote. You can override these yourself by calling setNoThreads() and setTimeoutMillis()
 
 ```java
     // Synchronously
-    ArrayList<Integer> openPorts = PortScan.onAddress("192.168.0.1").setPort(21).doScan();
+    ArrayList<Integer> openPorts = PortScan.onAddress("192.168.0.1").setMethodUDP().setPort(21).doScan();
 
     // Asynchronously
-    PortScan.onAddress("192.168.0.1").setTimeOutMillis(1000).setPortsAll().doScan(new PortScan.PortListener() {
+    PortScan.onAddress("192.168.0.1").setTimeOutMillis(1000).setPortsAll().setMethodTCP().doScan(new PortScan.PortListener() {
       @Override
       public void onResult(int portNo, boolean open) {
         if (open) // Stub: found open port
@@ -129,6 +129,7 @@ Sends a Wake-on-Lan packet to the IP / MAC address
 Other useful methods:
 
 ```java
+      // Get a MAC Address from an IP address in the ARP Cache
       String ipAddress = "192.168.0.1";
       String macAddress = ARPInfo.getMacFromArpCache(ipAddress);
 ```
