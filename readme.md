@@ -13,6 +13,8 @@ Disappointed by the lack of good network apis in android / java I developed a co
 
 ## General info
 
+The javadoc should provide all information needed to understand the methods, but if not feel free to add a issue in github and I'll address any questions! :)
+
 ### Sample app
 
 The sample app is published on Google play to allow you to quickly and easier test the library. Enjoy! And please do feedback to us if your tests produce different results. 
