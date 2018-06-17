@@ -1,11 +1,8 @@
 package com.stealthcopter.networktools.portscanning;
 
-import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.PortUnreachableException;
 import java.net.SocketTimeoutException;
 
 /**
@@ -17,10 +14,7 @@ public class PortScanUDP {
     private PortScanUDP() {
     }
 
-    public static PortInfo scanAddress(InetAddress ia, int portNo, int timeoutMillis) {
-
-        PortInfo portInfo = new PortInfo(ia.getHostAddress(), portNo);
-        portInfo.open = false;
+    public static boolean scanAddress(InetAddress ia, int portNo, int timeoutMillis) {
 
         try {
             byte[] bytes = new byte[128];
@@ -33,15 +27,14 @@ public class PortScanUDP {
             ds.isConnected();
             ds.receive(dp);
             ds.close();
-        } catch (PortUnreachableException e) {
-            portInfo.openState = "closed";
+
         } catch (SocketTimeoutException e) {
-            portInfo.open = true;
-            portInfo.openState = "open|filtered";
-        } catch (IOException e) {
-            portInfo.openState = "unknown";
+            return true;
+        } catch (Exception ignore) {
+
         }
-        return portInfo;
+
+        return false;
     }
 
 }

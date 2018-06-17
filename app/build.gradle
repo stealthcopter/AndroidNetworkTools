@@ -8,7 +8,7 @@ buildscript {
     classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
 
     // This is so we can publish straight to Google Play
-    classpath 'com.github.triplet.gradle:play-publisher:1.1.5'
+    classpath 'com.github.triplet.gradle:play-publisher:1.2.2'
   }
 }
 
@@ -17,8 +17,8 @@ apply plugin: 'spoon'
 apply plugin: 'com.github.triplet.play'
 
 play {
-  track = 'alpha'
-  serviceAccountEmail = 'androidnetworktoolspublisher@api-6650335122940819061-609121.iam.gserviceaccount.com'
+  track = 'beta'
+  serviceAccountEmail ANDROID_NETWORK_TOOLS_SERVICE_ACCOUNT
   pk12File = file('../key.p12')
 }
 

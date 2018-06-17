@@ -1,6 +1,7 @@
 package com.stealthcopter.networktools;
 
 import com.stealthcopter.networktools.portscanning.PortScanTCP;
+import com.stealthcopter.networktools.portscanning.PortScanUDP;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -15,13 +16,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class PortScan {
 
-    private int noThreads = 50;
-    private InetAddress address;
-    private int timeOutMillis = 1000;
-    private boolean cancelled = false;
-    private ArrayList<Integer> ports = new ArrayList<>();
-    private ArrayList<Integer> openPortsFound = new ArrayList<>();
-
     private static final int TIMEOUT_LOCALHOST = 25;
     private static final int TIMEOUT_LOCALNETWORK = 1000;
     private static final int TIMEOUT_REMOTE = 2500;
@@ -29,6 +23,18 @@ public class PortScan {
     private static final int DEFAULT_THREADS_LOCALHOST = 7;
     private static final int DEFAULT_THREADS_LOCALNETWORK = 50;
     private static final int DEFAULT_THREADS_REMOTE = 50;
+
+    private static final int METHOD_TCP = 0;
+    private static final int METHOD_UDP = 1;
+
+    private int method = METHOD_TCP;
+    private int noThreads = 50;
+    private InetAddress address;
+    private int timeOutMillis = 1000;
+    private boolean cancelled = false;
+
+    private ArrayList<Integer> ports = new ArrayList<>();
+    private ArrayList<Integer> openPortsFound = new ArrayList<>();
 
     private PortListener portListener;
 
@@ -70,7 +76,7 @@ public class PortScan {
 
     /**
      * Sets the timeout for each port scanned
-     *
+     * <p>
      * If you raise the timeout you may want to consider increasing the thread count {@link #setNoThreads(int)} to compensate.
      * We can afford to have quite a high thread count as most of the time the thread is just sitting
      * idle and waiting for the socket to timeout.
@@ -225,13 +231,54 @@ public class PortScan {
      * @param noThreads set the number of threads to work with, note we default to a large number
      *                  as these requests are network heavy not cpu heavy.
      * @return self
-     * @throws IllegalAccessException - if no threads is less than 1
+     * @throws IllegalArgumentException - if no threads is less than 1
      */
     public PortScan setNoThreads(int noThreads) throws IllegalArgumentException {
         if (noThreads < 1) throw new IllegalArgumentException("Cannot have less than 1 thread");
         this.noThreads = noThreads;
         return this;
     }
+
+
+    /**
+     * Set scan method, either TCP or UDP
+     *
+     * @param method - the transport method to use to scan, either PortScan.METHOD_UDP or PortScan.METHOD_TCP
+     * @return this object to allow chaining
+     * @throws IllegalArgumentException - if invalid method
+     */
+    private PortScan setMethod(int method) {
+        switch (method) {
+            case METHOD_UDP:
+            case METHOD_TCP:
+                this.method = method;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid method type " + method);
+        }
+        return this;
+    }
+
+    /**
+     * Set scan method to UDP
+     *
+     * @return this object to allow chaining
+     */
+    public PortScan setMethodUDP() {
+        setMethod(METHOD_UDP);
+        return this;
+    }
+
+    /**
+     * Set scan method to TCP
+     *
+     * @return this object to allow chaining
+     */
+    public PortScan setMethodTCP() {
+        setMethod(METHOD_TCP);
+        return this;
+    }
+
 
     /**
      * Cancel a running ping
@@ -253,7 +300,7 @@ public class PortScan {
         ExecutorService executor = Executors.newFixedThreadPool(noThreads);
 
         for (int portNo : ports) {
-            Runnable worker = new PortScanRunnable(address, portNo, timeOutMillis);
+            Runnable worker = new PortScanRunnable(address, portNo, timeOutMillis, method);
             executor.execute(worker);
         }
 
@@ -291,7 +338,7 @@ public class PortScan {
                 ExecutorService executor = Executors.newFixedThreadPool(noThreads);
 
                 for (int portNo : ports) {
-                    Runnable worker = new PortScanRunnable(address, portNo, timeOutMillis);
+                    Runnable worker = new PortScanRunnable(address, portNo, timeOutMillis, method);
                     executor.execute(worker);
                 }
 
@@ -329,17 +376,29 @@ public class PortScan {
         private final InetAddress address;
         private final int portNo;
         private final int timeOutMillis;
+        private final int method;
 
-        PortScanRunnable(InetAddress address, int portNo, int timeOutMillis) {
+        PortScanRunnable(InetAddress address, int portNo, int timeOutMillis, int method) {
             this.address = address;
             this.portNo = portNo;
             this.timeOutMillis = timeOutMillis;
+            this.method = method;
         }
 
         @Override
         public void run() {
             if (cancelled) return;
-            portScanned(portNo, PortScanTCP.scanAddress(address, portNo, timeOutMillis).open);
+
+            switch (method) {
+                case METHOD_UDP:
+                    portScanned(portNo, PortScanUDP.scanAddress(address, portNo, timeOutMillis));
+                    break;
+                case METHOD_TCP:
+                    portScanned(portNo, PortScanTCP.scanAddress(address, portNo, timeOutMillis));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid method");
+            }
         }
     }
 
