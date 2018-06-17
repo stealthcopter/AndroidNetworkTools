@@ -1,7 +1,5 @@
 package com.stealthcopter.networktools;
 
-import android.support.annotation.NonNull;
-
 import com.stealthcopter.networktools.ping.PingResult;
 import com.stealthcopter.networktools.subnet.Device;
 
@@ -17,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * Created by mat on 03/11/17.
  */
 public class SubnetDevices {
-    private int noThreads = 255;
+    private int noThreads = 100;
 
     private ArrayList<String> addresses;
     private ArrayList<Device> devicesFound;
@@ -30,6 +28,7 @@ public class SubnetDevices {
 
     public interface OnSubnetDeviceFound {
         void onDeviceFound(Device device);
+
         void onFinished(ArrayList<Device> devicesFound);
     }
 
@@ -39,7 +38,7 @@ public class SubnetDevices {
     public static SubnetDevices fromLocalAddress() {
         InetAddress ipv4 = IPTools.getLocalIPv4Address();
 
-        if (ipv4 == null){
+        if (ipv4 == null) {
             throw new IllegalAccessError("Could not access local ip address");
         }
 
@@ -49,7 +48,7 @@ public class SubnetDevices {
     /**
      * @param inetAddress - an ip address in the subnet
      */
-    public static SubnetDevices fromIPAddress(@NonNull InetAddress inetAddress) {
+    public static SubnetDevices fromIPAddress(InetAddress inetAddress) {
         return fromIPAddress(inetAddress.getHostAddress());
     }
 
@@ -57,9 +56,9 @@ public class SubnetDevices {
      * @param ipAddress - the ipAddress string of any device in the subnet i.e. "192.168.0.1"
      *                  the final part will be ignored
      */
-    public static SubnetDevices fromIPAddress(@NonNull final String ipAddress) {
+    public static SubnetDevices fromIPAddress(final String ipAddress) {
 
-        if (!IPTools.isIPv4Address(ipAddress)){
+        if (!IPTools.isIPv4Address(ipAddress)) {
             throw new IllegalArgumentException("Invalid IP Address");
         }
 
@@ -85,9 +84,8 @@ public class SubnetDevices {
 
     /**
      * @param ipAddresses - the ipAddresses of devices to be checked
-     *
      */
-    public static SubnetDevices fromIPList(@NonNull final List<String> ipAddresses) {
+    public static SubnetDevices fromIPList(final List<String> ipAddresses) {
 
         SubnetDevices subnetDevice = new SubnetDevices();
 
@@ -100,13 +98,12 @@ public class SubnetDevices {
     }
 
     /**
-     *
      * @param noThreads set the number of threads to work with, note we default to a large number
      *                  as these requests are network heavy not cpu heavy.
      * @return self
      * @throws IllegalAccessException
      */
-    public SubnetDevices setNoThreads(int noThreads) throws IllegalAccessException {
+    public SubnetDevices setNoThreads(int noThreads) throws IllegalArgumentException {
         if (noThreads < 1) throw new IllegalArgumentException("Cannot have less than 1 thread");
         this.noThreads = noThreads;
         return this;
@@ -117,8 +114,8 @@ public class SubnetDevices {
      *
      * @return this object to allow chaining
      */
-    public SubnetDevices setTimeOutMillis(int timeOutMillis){
-        if (timeOutMillis<0) throw new IllegalArgumentException("Timeout cannot be less than 0");
+    public SubnetDevices setTimeOutMillis(int timeOutMillis) {
+        if (timeOutMillis < 0) throw new IllegalArgumentException("Timeout cannot be less than 0");
         this.timeOutMillis = timeOutMillis;
         return this;
     }
@@ -150,7 +147,7 @@ public class SubnetDevices {
         this.listener.onFinished(devicesFound);
     }
 
-    private synchronized void subnetDeviceFound(Device device){
+    private synchronized void subnetDeviceFound(Device device) {
         devicesFound.add(device);
         listener.onDeviceFound(device);
     }

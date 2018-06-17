@@ -17,6 +17,7 @@ public class PingTest {
     public void testIllegalArgumentThrownOnInvalidTimeout() throws Exception {
         Ping.onAddress("127.0.0.1").setTimeOutMillis(-1);
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalArgumentThrownOnInvalidTimes() throws Exception {
         Ping.onAddress("127.0.0.1").setTimes(-1);

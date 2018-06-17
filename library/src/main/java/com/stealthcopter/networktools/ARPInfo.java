@@ -1,13 +1,10 @@
 package com.stealthcopter.networktools;
 
-import android.support.annotation.Nullable;
-import android.support.v4.util.Pair;
-import android.text.TextUtils;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by mat on 09/12/15.
@@ -33,7 +30,6 @@ public class ARPInfo {
      * @param ip - IP address to search for
      * @return the MAC from the ARP cache or null in format "01:23:45:67:89:ab"
      */
-    @Nullable
     public static String getMACFromIPAddress(String ip) {
         if (ip == null) {
             return null;
@@ -61,7 +57,6 @@ public class ARPInfo {
      * @param macAddress in format "01:23:45:67:89:ab" to search for
      * @return the IP address found or null in format "192.168.0.1"
      */
-    @Nullable
     public static String getIPAddressFromMAC(String macAddress) {
         if (macAddress == null) {
             return null;
@@ -86,11 +81,7 @@ public class ARPInfo {
      * @return list of IP addresses found
      */
     public static ArrayList<String> getAllIPAddressesInARPCache() {
-        ArrayList<String> ipList = new ArrayList<>();
-        for (Pair<String, String> ipMacPair : getAllIPAndMACAddressesInARPCache()) {
-            ipList.add(ipMacPair.first);
-        }
-        return ipList;
+        return new ArrayList<>(getAllIPAndMACAddressesInARPCache().keySet());
     }
 
     /**
@@ -99,11 +90,7 @@ public class ARPInfo {
      * @return list of MAC addresses found
      */
     public static ArrayList<String> getAllMACAddressesInARPCache() {
-        ArrayList<String> macList = new ArrayList<>();
-        for (Pair<String, String> ipMacPair : getAllIPAndMACAddressesInARPCache()) {
-            macList.add(ipMacPair.second);
-        }
-        return macList;
+        return new ArrayList<>(getAllIPAndMACAddressesInARPCache().values());
     }
 
 
@@ -112,15 +99,15 @@ public class ARPInfo {
      *
      * @return list of IP/MAC address pairs found
      */
-    public static ArrayList<Pair<String, String>> getAllIPAndMACAddressesInARPCache() {
-        ArrayList<Pair<String, String>> macList = new ArrayList<>();
+    public static HashMap<String, String> getAllIPAndMACAddressesInARPCache() {
+        HashMap<String, String> macList = new HashMap<>();
         for (String line : getLinesInARPCache()) {
             String[] splitted = line.split(" +");
             if (splitted.length >= 4) {
                 // Ignore values with invalid MAC addresses
                 if (splitted[3].matches("..:..:..:..:..:..")
                         && !splitted[3].equals("00:00:00:00:00:00")) {
-                    macList.add(new Pair<>(splitted[0], splitted[3]));
+                    macList.put(splitted[0], splitted[3]);
                 }
             }
         }

@@ -2,11 +2,7 @@ package com.stealthcopter.networktools;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
-
 import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
@@ -25,7 +21,7 @@ public class ARPInfoTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testIllegalArgumentThrownOnInvalidMACaddress(){
+    public void testIllegalArgumentThrownOnInvalidMACaddress() {
         ARPInfo.getIPAddressFromMAC("00:00:00:xx");
     }
 }

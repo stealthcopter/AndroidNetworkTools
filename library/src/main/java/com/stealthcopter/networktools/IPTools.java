@@ -1,7 +1,5 @@
 package com.stealthcopter.networktools;
 
-import android.support.annotation.Nullable;
-
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -56,7 +54,6 @@ public class IPTools {
     /**
      * @return The first local IPv4 address, or null
      */
-    @Nullable
     public static InetAddress getLocalIPv4Address() {
         ArrayList<InetAddress> localAddresses = getLocalIPv4Addresses();
         return localAddresses.size() > 0 ? localAddresses.get(0) : null;

@@ -12,21 +12,19 @@ public class PingStats {
     private final float averageTimeTaken;
     private final float minTimeTaken;
     private final float maxTimeTaken;
+    private final boolean isReachable;
 
-    public PingStats(InetAddress ia, long noPings, long packetsLost, float totalTimeTaken, float minTimeTaken, float maxTimeTaken){
-        this.ia=ia;
+    public PingStats(InetAddress ia, long noPings, long packetsLost, float totalTimeTaken, float minTimeTaken, float maxTimeTaken) {
+        this.ia = ia;
         this.noPings = noPings;
         this.packetsLost = packetsLost;
-        this.averageTimeTaken = (100.0f * totalTimeTaken) / noPings;
+        this.averageTimeTaken = totalTimeTaken / noPings;
         this.minTimeTaken = minTimeTaken;
         this.maxTimeTaken = maxTimeTaken;
+        this.isReachable = noPings - packetsLost > 0;
     }
 
-    public InetAddress getAddress(){
-        return ia;
-    }
-
-    public InetAddress getIa() {
+    public InetAddress getAddress() {
         return ia;
     }
 
@@ -48,6 +46,10 @@ public class PingStats {
 
     public float getMaxTimeTaken() {
         return maxTimeTaken;
+    }
+
+    public boolean isReachable() {
+        return isReachable;
     }
 
     public long getAverageTimeTakenMillis() {

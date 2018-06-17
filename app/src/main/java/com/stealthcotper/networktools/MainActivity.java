@@ -36,11 +36,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        resultText = (TextView) findViewById(R.id.resultText);
-        editIpAddress = (EditText) findViewById(R.id.editIpAddress);
+        resultText = findViewById(R.id.resultText);
+        editIpAddress = findViewById(R.id.editIpAddress);
 
         InetAddress ipAddress = IPTools.getLocalIPv4Address();
         if (ipAddress != null){
@@ -152,6 +152,11 @@ public class MainActivity extends AppCompatActivity {
                 appendResultsText(String.format("Min/Avg/Max Time: %.2f/%.2f/%.2f ms",
                         pingStats.getMinTimeTaken(), pingStats.getAverageTimeTaken(), pingStats.getMaxTimeTaken()));
             }
+
+            @Override
+            public void onError(Exception e) {
+                // TODO: STUB METHOD
+            }
         });
 
     }
@@ -196,12 +201,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Perform synchronous port scan
         appendResultsText("PortScanning IP: " + ipAddress);
-        ArrayList<Integer> openPorts = PortScan.onAddress(ipAddress).setPort(21).doScan();
+        ArrayList<Integer> openPorts = PortScan.onAddress(ipAddress).setPort(21).setMethodTCP().doScan();
 
         final long startTimeMillis = System.currentTimeMillis();
 
         // Perform an asynchronous port scan
-        PortScan.onAddress(ipAddress).setPortsAll().doScan(new PortScan.PortListener() {
+        PortScan.onAddress(ipAddress).setPortsAll().setMethodTCP().doScan(new PortScan.PortListener() {
             @Override
             public void onResult(int portNo, boolean open) {
                 if (open) appendResultsText("Open: " + portNo);
@@ -234,10 +239,7 @@ public class MainActivity extends AppCompatActivity {
                 appendResultsText("Finished "+timeTaken+" s");
             }
         });
-
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

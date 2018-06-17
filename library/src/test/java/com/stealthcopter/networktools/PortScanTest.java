@@ -15,6 +15,7 @@ public class PortScanTest {
     public void testIllegalArgumentThrownOnInvalidPortLow() throws Exception {
         PortScan.onAddress("127.0.0.1").setPort(0);
     }
+
     @Test(expected = IllegalArgumentException.class)
     public void testIllegalArgumentThrownOnInvalidPortHigh() throws Exception {
         PortScan.onAddress("127.0.0.1").setPort(65536);
