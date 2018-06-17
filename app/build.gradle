@@ -32,6 +32,7 @@ android {
     targetSdkVersion targetSdkVer
     versionCode versionName
     versionName versionCode
+    archivesBaseName = "AndroidNetworkTools"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
 
