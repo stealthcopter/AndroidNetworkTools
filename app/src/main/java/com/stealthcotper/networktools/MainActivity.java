@@ -201,12 +201,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Perform synchronous port scan
         appendResultsText("PortScanning IP: " + ipAddress);
-        ArrayList<Integer> openPorts = PortScan.onAddress(ipAddress).setPort(21).doScan();
+        ArrayList<Integer> openPorts = PortScan.onAddress(ipAddress).setPort(21).setMethodTCP().doScan();
 
         final long startTimeMillis = System.currentTimeMillis();
 
         // Perform an asynchronous port scan
-        PortScan.onAddress(ipAddress).setPortsAll().doScan(new PortScan.PortListener() {
+        PortScan.onAddress(ipAddress).setPortsAll().setMethodTCP().doScan(new PortScan.PortListener() {
             @Override
             public void onResult(int portNo, boolean open) {
                 if (open) appendResultsText("Open: " + portNo);

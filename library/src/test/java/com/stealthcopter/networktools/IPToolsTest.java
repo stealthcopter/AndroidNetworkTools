@@ -81,7 +81,7 @@ public class IPToolsTest {
     }
 
     @Test
-    @Ignore  // Not working yet, possibly not correct pattern for compression
+    @Ignore  // Recheck this, either test is broken or regex is wrong
     public void testIPv6HexCompressedAddress() {
         for (String address : getIPv6AddressesHexCompresed()) {
             assertTrue(IPTools.isIPv6HexCompressedAddress(address));

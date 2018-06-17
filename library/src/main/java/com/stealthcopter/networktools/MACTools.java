@@ -18,7 +18,7 @@ public class MACTools {
      *
      * @param macAddress - the MAC address to check
      * @return - true if it is valid MAC address in IEEE802 format (either hyphen or colon seperated)
-     * eg: "01:23:45:67:89:AB:CD:EF" or "01-23-45-67-89-AB-CD-EF"
+     * eg: "01:23:45:67:89:AB" or "01-23-45-67-89-AB"
      */
     public static boolean isValidMACAddress(final String macAddress) {
         return macAddress != null && PATTERN_MAC.matcher(macAddress).matches();
@@ -29,7 +29,7 @@ public class MACTools {
      * Convert a MAC string to bytes
      *
      * @param macStr - MAC string in IEEE802 format (either hyphen or colon seperated)
-     *               eg: "01:23:45:67:89:AB:CD:EF" or "01-23-45-67-89-AB-CD-EF"
+     *               eg: "01:23:45:67:89:AB" or "01-23-45-67-89-AB"
      * @return - MAC formatted in bytes
      * @throws IllegalArgumentException - if mac address is invalid
      */
