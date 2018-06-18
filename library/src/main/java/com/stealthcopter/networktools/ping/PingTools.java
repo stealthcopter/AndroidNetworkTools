@@ -45,8 +45,8 @@ public class PingTools {
      * @param ia            - address to ping
      * @param timeOutMillis - timeout in millisecdonds
      * @return - the ping results
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException - IO error running ping command
+     * @throws InterruptedException - thread interupt
      */
     public static PingResult doNativePing(InetAddress ia, int timeOutMillis) throws IOException, InterruptedException {
         return PingNative.ping(ia, timeOutMillis);

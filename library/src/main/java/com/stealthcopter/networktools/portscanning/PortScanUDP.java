@@ -14,6 +14,15 @@ public class PortScanUDP {
     private PortScanUDP() {
     }
 
+    /**
+     * Check if a port is open with UDP, note that this isn't reliable
+     * as UDP will does not send ACKs
+     *
+     * @param ia            - address to scan
+     * @param portNo        - port to scan
+     * @param timeoutMillis - timeout
+     * @return - true if port is open, false if not or unknown
+     */
     public static boolean scanAddress(InetAddress ia, int portNo, int timeoutMillis) {
 
         try {

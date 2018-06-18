@@ -86,13 +86,15 @@ public class PingNative {
      * # activity_ping 321321.
      * activity_ping: unknown host 321321.
      *
-     * 1. Check if output contains 0% packet loss : Branch to success -> Get stats
-     * 2. Check if output contains 100% packet loss : Branch to fail -> No stats
-     * 3. Check if output contains 25% packet loss : Branch to partial success -> Get stats
+     * 1. Check if output contains 0% packet loss : Branch to success - Get stats
+     * 2. Check if output contains 100% packet loss : Branch to fail - No stats
+     * 3. Check if output contains 25% packet loss : Branch to partial success - Get stats
      * 4. Check if output contains "unknown host"
      *
-     * @param pingResult
-     * @param s
+     * @param pingResult - the current ping result
+     * @param s - result from ping command
+     *
+     * @return The ping result
      */
     public static PingResult getPingStats(PingResult pingResult, String s) {
         String pingError;

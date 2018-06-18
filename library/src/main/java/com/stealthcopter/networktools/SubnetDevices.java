@@ -34,6 +34,8 @@ public class SubnetDevices {
 
     /**
      * Find devices on the subnet working from the local device ip address
+     *
+     * @return - this for chaining
      */
     public static SubnetDevices fromLocalAddress() {
         InetAddress ipv4 = IPTools.getLocalIPv4Address();
@@ -47,6 +49,8 @@ public class SubnetDevices {
 
     /**
      * @param inetAddress - an ip address in the subnet
+     *
+     * @return - this for chaining
      */
     public static SubnetDevices fromIPAddress(InetAddress inetAddress) {
         return fromIPAddress(inetAddress.getHostAddress());
@@ -55,6 +59,8 @@ public class SubnetDevices {
     /**
      * @param ipAddress - the ipAddress string of any device in the subnet i.e. "192.168.0.1"
      *                  the final part will be ignored
+     *
+     * @return - this for chaining
      */
     public static SubnetDevices fromIPAddress(final String ipAddress) {
 
@@ -84,6 +90,8 @@ public class SubnetDevices {
 
     /**
      * @param ipAddresses - the ipAddresses of devices to be checked
+     *
+     * @return - this for chaining
      */
     public static SubnetDevices fromIPList(final List<String> ipAddresses) {
 
@@ -100,8 +108,10 @@ public class SubnetDevices {
     /**
      * @param noThreads set the number of threads to work with, note we default to a large number
      *                  as these requests are network heavy not cpu heavy.
-     * @return self
-     * @throws IllegalAccessException
+     *
+     * @throws IllegalArgumentException - if invalid number of threads requested
+     *
+     * @return - this for chaining
      */
     public SubnetDevices setNoThreads(int noThreads) throws IllegalArgumentException {
         if (noThreads < 1) throw new IllegalArgumentException("Cannot have less than 1 thread");
@@ -112,9 +122,13 @@ public class SubnetDevices {
     /**
      * Sets the timeout for each address we try to ping
      *
+     * @param timeOutMillis - timeout in milliseconds for each ping
+     *
      * @return this object to allow chaining
+     *
+     * @throws IllegalArgumentException - if timeout is less than zero
      */
-    public SubnetDevices setTimeOutMillis(int timeOutMillis) {
+    public SubnetDevices setTimeOutMillis(int timeOutMillis) throws IllegalArgumentException {
         if (timeOutMillis < 0) throw new IllegalArgumentException("Timeout cannot be less than 0");
         this.timeOutMillis = timeOutMillis;
         return this;

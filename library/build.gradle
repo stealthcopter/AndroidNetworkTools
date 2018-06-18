@@ -8,5 +8,14 @@ dependencies {
   testImplementation 'org.mockito:mockito-core:2.10.0'
 }
 
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+artifacts {
+    archives javadocJar
+}
+
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
