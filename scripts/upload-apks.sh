@@ -22,7 +22,7 @@ function upload_to_beta {
 function upload_to_google_play {
     echo "Uploading $1 to Google Play"
     
-    if ./gradlew :$1:publishApkRegularRelease ; then
+    if ./gradlew :$1:publishApkRelease ; then
         webhook $1 "$APP_RELEASE_NAME" "Uploading to Google Play Succeeded"
     else
         webhook $1 "$APP_RELEASE_NAME" "Uploading to Google Play FAILED :("
@@ -39,7 +39,7 @@ function upload_to_google_play {
 # Print the git commit message
 echo "Git commit message: ${GIT_COMMIT_DESC}"
 
-if [[ $GIT_COMMIT_DESC == *"#DEPLOY"* ]]; then
+if [[ $GIT_COMMIT_DESC == *"#PLAY_BETA"* ]]; then
     upload_to_google_play "app"  
 else
     echo "Not publishing to Google Play as deploy not found in commit message"
