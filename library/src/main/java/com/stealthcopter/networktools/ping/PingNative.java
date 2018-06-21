@@ -16,13 +16,13 @@ public class PingNative {
     private PingNative() {
     }
 
-    public static PingResult ping(InetAddress host, int timeOutMillis) throws IOException, InterruptedException {
+    public static PingResult ping(InetAddress host, PingOptions pingOptions) throws IOException, InterruptedException {
         PingResult pingResult = new PingResult(host);
         StringBuilder echo = new StringBuilder();
         Runtime runtime = Runtime.getRuntime();
 
-        int timeoutSeconds = timeOutMillis / 1000;
-        if (timeoutSeconds < 0) timeoutSeconds = 1;
+        int timeoutSeconds = Math.max(pingOptions.getTimeoutMillis() / 1000, 1);
+        int ttl = Math.max(pingOptions.getTimeToLive(), 1);
 
         String address = host.getHostAddress();
         String pingCommand = "ping";
@@ -40,7 +40,7 @@ public class PingNative {
             address = host.getHostName();
         }
 
-        Process proc = runtime.exec(pingCommand + " -c 1 -w " + timeoutSeconds + " " + address);
+        Process proc = runtime.exec(pingCommand + " -c 1 -w " + timeoutSeconds + " -w" + ttl + " " + address);
         proc.waitFor();
         int exit = proc.exitValue();
         String pingError;
