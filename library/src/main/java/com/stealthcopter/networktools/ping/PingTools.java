@@ -2,7 +2,6 @@ package com.stealthcopter.networktools.ping;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
 
 /**
  * Created by mat on 09/12/15.
@@ -47,7 +46,7 @@ public class PingTools {
      * @param pingOptions   - ping command options
      * @return - the ping results
      * @throws IOException - IO error running ping command
-     * @throws InterruptedException - thread interupt
+     * @throws InterruptedException - thread interrupt
      */
     public static PingResult doNativePing(InetAddress ia, PingOptions pingOptions) throws IOException, InterruptedException {
         return PingNative.ping(ia, pingOptions);

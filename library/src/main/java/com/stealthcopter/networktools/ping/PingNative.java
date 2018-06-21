@@ -50,18 +50,21 @@ public class PingNative {
         proc.waitFor();
         int exit = proc.exitValue();
         String pingError;
-        if (exit == 0) {
-            InputStreamReader reader = new InputStreamReader(proc.getInputStream());
-            BufferedReader buffer = new BufferedReader(reader);
-            String line;
-            while ((line = buffer.readLine()) != null) {
-                echo.append(line).append("\n");
-            }
-            return getPingStats(pingResult, echo.toString());
-        } else if (exit == 1) {
-            pingError = "failed, exit = 1";
-        } else {
-            pingError = "error, exit = 2";
+        switch (exit) {
+            case 0:
+                InputStreamReader reader = new InputStreamReader(proc.getInputStream());
+                BufferedReader buffer = new BufferedReader(reader);
+                String line;
+                while ((line = buffer.readLine()) != null) {
+                    echo.append(line).append("\n");
+                }
+                return getPingStats(pingResult, echo.toString());
+            case 1:
+                pingError = "failed, exit = 1";
+                break;
+            default:
+                pingError = "error, exit = 2";
+                break;
         }
         pingResult.error = pingError;
         return pingResult;

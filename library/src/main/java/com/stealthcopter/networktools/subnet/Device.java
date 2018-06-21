@@ -3,11 +3,9 @@ package com.stealthcopter.networktools.subnet;
 import java.net.InetAddress;
 
 public class Device {
-    public String ip = "";
-    public String hostname = "";
-    public String mac = "";
-
-
+    public String ip;
+    public String hostname;
+    public String mac;
     public float time = 0;
 
     public Device(InetAddress ip) {
