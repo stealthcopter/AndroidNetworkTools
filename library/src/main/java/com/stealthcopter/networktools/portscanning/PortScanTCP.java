@@ -14,6 +14,14 @@ public class PortScanTCP {
     private PortScanTCP() {
     }
 
+    /**
+     * Check if a port is open with TCP
+     *
+     * @param ia            - address to scan
+     * @param portNo        - port to scan
+     * @param timeoutMillis - timeout
+     * @return - true if port is open, false if not or unknown
+     */
     public static boolean scanAddress(InetAddress ia, int portNo, int timeoutMillis) {
 
         Socket s = null;

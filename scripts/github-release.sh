@@ -16,7 +16,7 @@ GITHUB_UPLOAD_URL="https://uploads.github.com/repos/stealthcopter/AndroidNetwork
 
 function create_github_release { 
 
-    version=`cat $1/build.gradle | grep -m 1 versionName | cut -d'"' -f 2`
+    version=$2
     
     echo "Uploading release"
     
@@ -33,7 +33,7 @@ function create_github_release {
     echo "Found id $id"
     
     # Upload apk file
-    GITHUB_RELEASE_FILE_PATH="app/build/outputs/apk/release/AndroidNetworkTools.apk"
+    GITHUB_RELEASE_FILE_PATH="app/build/outputs/apk/release/AndroidNetworkTools-release.apk"
     GITHUB_RELASE_FILENAME="AndroidNetworkTools.apk"
     curl -H "Content-Type:application/zip" -H "Authorization: token $GITHUB_RELEASE_TOKEN" --data-binary @"$GITHUB_RELEASE_FILE_PATH" $GITHUB_UPLOAD_URL$id/assets?name=$GITHUB_RELASE_FILENAME
 
@@ -57,7 +57,7 @@ function create_github_release {
 
 if [[ $GIT_TAG != *"undefined"* ]]; then
     echo "Creating github release for tag $GIT_TAG"
-    if create_github_release $GITHUB_RELEASE_MODULE; then
+    if create_github_release $GITHUB_RELEASE_MODULE $GIT_TAG; then
         webhook $GITHUB_RELEASE_MODULE "$GITHUB_RELEASE_NAME" "Created github release for tag $TAG"
     else
         webhook $GITHUB_RELEASE_MODULE "$GITHUB_RELEASE_NAME" "Failed to create github release for tag $TAG :("

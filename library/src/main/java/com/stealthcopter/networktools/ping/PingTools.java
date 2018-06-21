@@ -46,8 +46,8 @@ public class PingTools {
      * @param ia            - address to ping
      * @param pingOptions   - ping command options
      * @return - the ping results
-     * @throws IOException
-     * @throws InterruptedException
+     * @throws IOException - IO error running ping command
+     * @throws InterruptedException - thread interupt
      */
     public static PingResult doNativePing(InetAddress ia, PingOptions pingOptions) throws IOException, InterruptedException {
         return PingNative.ping(ia, pingOptions);
@@ -64,6 +64,12 @@ public class PingTools {
      */
     public static PingResult doJavaPing(InetAddress ia, PingOptions pingOptions) {
         PingResult pingResult = new PingResult(ia);
+
+        if (ia == null) {
+            pingResult.isReachable = false;
+            return pingResult;
+        }
+
         try {
             long startTime = System.nanoTime();
             final boolean reached = ia.isReachable(null, pingOptions.getTimeToLive(), pingOptions.getTimeoutMillis());

@@ -54,7 +54,7 @@ public class PortScan {
      * @param address - Address to be pinged
      * @return this object to allow chaining
      * @throws UnknownHostException - if no IP address for the
-     *                              <code>host</code> could be found, or if a scope_id was specified
+     *                              {@code host} could be found, or if a scope_id was specified
      *                              for a global IPv6 address.
      */
     public static PortScan onAddress(String address) throws UnknownHostException {

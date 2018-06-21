@@ -141,6 +141,8 @@ public class WakeOnLan {
     /**
      * Asynchronous call of the wake method. This will be performed on the background thread
      * and optionally fire a listener when complete, or when an error occurs
+     *
+     * @param wakeOnLanListener - listener to call on result
      */
     public void wake(final WakeOnLanListener wakeOnLanListener) {
 
@@ -165,6 +167,9 @@ public class WakeOnLan {
      *
      * @param ipStr  - IP String to send to
      * @param macStr - MAC address to wake up
+     *
+     * @throws IllegalArgumentException - invalid ip or mac
+     * @throws IOException - error sending packet
      */
     public static void sendWakeOnLan(String ipStr, String macStr) throws IllegalArgumentException, IOException {
         sendWakeOnLan(ipStr, macStr, DEFAULT_PORT, DEFAULT_TIMEOUT_MILLIS, DEFAULT_NO_PACKETS);
@@ -178,6 +183,9 @@ public class WakeOnLan {
      * @param port          - port to send packet to
      * @param timeoutMillis - timeout (millis)
      * @param packets       - number of packets to send
+     *
+     * @throws IllegalArgumentException - invalid ip or mac
+     * @throws IOException - error sending packet
      */
     public static void sendWakeOnLan(final String ipStr, final String macStr, final int port, final int timeoutMillis, final int packets) throws IllegalArgumentException, IOException {
         if (ipStr == null) throw new IllegalArgumentException("Address cannot be null");
@@ -193,6 +201,9 @@ public class WakeOnLan {
      * @param port          - port to send packet to
      * @param timeoutMillis - timeout (millis)
      * @param packets       - number of packets to send
+     *
+     * @throws IllegalArgumentException - invalid ip or mac
+     * @throws IOException - error sending packet
      */
     public static void sendWakeOnLan(final InetAddress address, final String macStr, final int port, final int timeoutMillis, final int packets) throws IllegalArgumentException, IOException {
         if (address == null) throw new IllegalArgumentException("Address cannot be null");

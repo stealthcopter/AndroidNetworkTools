@@ -154,6 +154,7 @@ public class Ping {
      * request
      *
      * @return - ping result
+     * @throws UnknownHostException - if the host cannot be resolved
      */
     public PingResult doPing() throws UnknownHostException {
         cancelled = false;
