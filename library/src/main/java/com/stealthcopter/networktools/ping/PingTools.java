@@ -63,6 +63,12 @@ public class PingTools {
      */
     public static PingResult doJavaPing(InetAddress ia, int timeOutMillis) {
         PingResult pingResult = new PingResult(ia);
+
+        if (ia == null) {
+            pingResult.isReachable = false;
+            return pingResult;
+        }
+
         try {
             long startTime = System.nanoTime();
             final boolean reached = ia.isReachable(timeOutMillis);

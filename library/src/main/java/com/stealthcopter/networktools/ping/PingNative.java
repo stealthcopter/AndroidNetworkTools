@@ -18,6 +18,12 @@ public class PingNative {
 
     public static PingResult ping(InetAddress host, int timeOutMillis) throws IOException, InterruptedException {
         PingResult pingResult = new PingResult(host);
+
+        if (host == null) {
+            pingResult.isReachable = false;
+            return pingResult;
+        }
+
         StringBuilder echo = new StringBuilder();
         Runtime runtime = Runtime.getRuntime();
 
