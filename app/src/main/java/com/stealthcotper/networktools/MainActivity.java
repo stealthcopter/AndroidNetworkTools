@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         final long startTimeMillis = System.currentTimeMillis();
 
         // Perform an asynchronous port scan
-        PortScan.onAddress(ipAddress).setPortsAll().setMethodTCP().doScan(new PortScan.PortListener() {
+        PortScan portScan = PortScan.onAddress(ipAddress).setPortsAll().setMethodTCP().doScan(new PortScan.PortListener() {
             @Override
             public void onResult(int portNo, boolean open) {
                 if (open) appendResultsText("Open: " + portNo);
@@ -219,6 +219,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Below is example of how to cancel a running scan
+        // portScan.cancel();
     }
 
 
@@ -226,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
         final long startTimeMillis = System.currentTimeMillis();
 
-        SubnetDevices.fromLocalAddress().findDevices(new SubnetDevices.OnSubnetDeviceFound() {
+        SubnetDevices subnetDevices = SubnetDevices.fromLocalAddress().findDevices(new SubnetDevices.OnSubnetDeviceFound() {
             @Override
             public void onDeviceFound(Device device) {
                 appendResultsText("Device: " + device.ip+" "+ device.hostname);
@@ -239,6 +241,10 @@ public class MainActivity extends AppCompatActivity {
                 appendResultsText("Finished "+timeTaken+" s");
             }
         });
+
+        // Below is example of how to cancel a running scan
+        // subnetDevices.cancel();
+
     }
 
     @Override

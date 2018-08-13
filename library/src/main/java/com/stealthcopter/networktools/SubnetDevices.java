@@ -21,6 +21,7 @@ public class SubnetDevices {
     private ArrayList<Device> devicesFound;
     private OnSubnetDeviceFound listener;
     private int timeOutMillis = 2500;
+    private boolean cancelled = false;
 
     // This class is not to be instantiated
     private SubnetDevices() {
@@ -134,31 +135,53 @@ public class SubnetDevices {
         return this;
     }
 
+    /**
+     * Cancel a running scan
+     */
+    public void cancel() {
+        this.cancelled = true;
+    }
 
-    public void findDevices(final OnSubnetDeviceFound listener) {
+    /**
+     * Starts the scan to find other devices on the subnet
+     *
+     * @param listener - to pass on the results
+     * @return this object so we can call cancel on it if needed
+     */
+    public SubnetDevices findDevices(final OnSubnetDeviceFound listener) {
 
         this.listener = listener;
 
+        cancelled = false;
         devicesFound = new ArrayList<>();
 
-        ExecutorService executor = Executors.newFixedThreadPool(this.noThreads);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        for (final String add : addresses) {
-            Runnable worker = new SubnetDeviceFinderRunnable(add);
-            executor.execute(worker);
-        }
+                ExecutorService executor = Executors.newFixedThreadPool(noThreads);
 
-        // This will make the executor accept no new threads
-        // and finish all existing threads in the queue
-        executor.shutdown();
-        // Wait until all threads are finish
-        try {
-            executor.awaitTermination(1, TimeUnit.HOURS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+                for (final String add : addresses) {
+                    Runnable worker = new SubnetDeviceFinderRunnable(add);
+                    executor.execute(worker);
+                }
 
-        this.listener.onFinished(devicesFound);
+                // This will make the executor accept no new threads
+                // and finish all existing threads in the queue
+                executor.shutdown();
+                // Wait until all threads are finish
+                try {
+                    executor.awaitTermination(1, TimeUnit.HOURS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                listener.onFinished(devicesFound);
+
+            }
+        }).start();
+
+        return this;
     }
 
     private synchronized void subnetDeviceFound(Device device) {
@@ -175,6 +198,9 @@ public class SubnetDevices {
 
         @Override
         public void run() {
+
+            if (cancelled) return;
+
             try {
                 InetAddress ia = InetAddress.getByName(address);
                 PingResult pingResult = Ping.onAddress(ia).setTimeOutMillis(timeOutMillis).doPing();
