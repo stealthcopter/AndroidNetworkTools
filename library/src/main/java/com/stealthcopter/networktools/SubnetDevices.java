@@ -6,6 +6,7 @@ import com.stealthcopter.networktools.subnet.Device;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,6 +23,7 @@ public class SubnetDevices {
     private OnSubnetDeviceFound listener;
     private int timeOutMillis = 2500;
     private boolean cancelled = false;
+    private HashMap<String, String> ipMacHashMap = null;
 
     // This class is not to be instantiated
     private SubnetDevices() {
@@ -73,7 +75,7 @@ public class SubnetDevices {
 
         subnetDevice.addresses = new ArrayList<>();
 
-        // Get addresses from ARP Info first as they are likely to be pingable
+        // Get addresses from ARP Info first as they are likely to be reachable
         subnetDevice.addresses.addAll(ARPInfo.getAllIPAddressesInARPCache());
 
         // Add all missing addresses in subnet
@@ -159,6 +161,10 @@ public class SubnetDevices {
             @Override
             public void run() {
 
+                // Load mac addresses into cache var (to avoid hammering the /proc/net/arp file when
+                // lots of devices are found on the network.
+                ipMacHashMap = ARPInfo.getAllIPAndMACAddressesInARPCache();
+
                 ExecutorService executor = Executors.newFixedThreadPool(noThreads);
 
                 for (final String add : addresses) {
@@ -175,6 +181,17 @@ public class SubnetDevices {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                // Loop over devices found and add in the MAC addresses if missing.
+                // We do this after scanning for all devices as /proc/net/arp may add info
+                // because of the scan.
+                ipMacHashMap = ARPInfo.getAllIPAndMACAddressesInARPCache();
+                for (Device device : devicesFound) {
+                    if (device.mac == null && ipMacHashMap.containsKey(device.ip)) {
+                        device.mac = ipMacHashMap.get(device.ip);
+                    }
+                }
+
 
                 listener.onFinished(devicesFound);
 
@@ -206,7 +223,12 @@ public class SubnetDevices {
                 PingResult pingResult = Ping.onAddress(ia).setTimeOutMillis(timeOutMillis).doPing();
                 if (pingResult.isReachable) {
                     Device device = new Device(ia);
-                    device.mac = ARPInfo.getMACFromIPAddress(ia.getHostAddress());
+
+                    // Add the device MAC address if it is in the cache
+                    if (ipMacHashMap.containsKey(ia.getHostAddress())) {
+                        device.mac = ipMacHashMap.get(ia.getHostAddress());
+                    }
+
                     device.time = pingResult.timeTaken;
                     subnetDeviceFound(device);
                 }
