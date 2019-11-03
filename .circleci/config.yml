@@ -15,7 +15,7 @@ jobs:
           name: Copy Environment Vars
           command: scripts/cp-env-to-properties.sh
           
-      # Decrypt any secret files / keys
+      # Decrypt any secret files / keys 
       - run:
           name: Decrypt secret files
           command: scripts/decrypt-secrets.sh
