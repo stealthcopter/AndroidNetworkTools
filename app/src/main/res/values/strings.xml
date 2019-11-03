@@ -7,5 +7,6 @@
   <string name="port_scan">Port Scan</string>
   <string name="github_page">Github</string>
   <string name="github_url">https://github.com/stealthcopter/AndroidNetworkTools</string>
-    <string name="subnet">Subnet Devices</string>
+  <string name="subnet">Subnet Devices</string>
+  <string name="timeout">** Timeout **</string>
 </resources>

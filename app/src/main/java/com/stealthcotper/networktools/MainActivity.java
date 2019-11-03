@@ -10,7 +10,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.stealthcopter.networktools.ARPInfo;
@@ -25,12 +27,18 @@ import com.stealthcopter.networktools.subnet.Device;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView resultText;
     private EditText editIpAddress;
+    private ScrollView scrollView;
+    private Button pingButton;
+    private Button wolButton;
+    private Button portScanButton;
+    private Button subnetDevicesButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
         resultText = findViewById(R.id.resultText);
         editIpAddress = findViewById(R.id.editIpAddress);
+        scrollView = findViewById(R.id.scrollView1);
+        pingButton = findViewById(R.id.pingButton);
+        wolButton = findViewById(R.id.wolButton);
+        portScanButton = findViewById(R.id.portScanButton);
+        subnetDevicesButton = findViewById(R.id.subnetDevicesButton);
 
         InetAddress ipAddress = IPTools.getLocalIPv4Address();
         if (ipAddress != null){
@@ -118,6 +131,23 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 resultText.append(text + "\n");
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                });
+            }
+        });
+    }
+
+    private void setEnabled(final View view, final boolean enabled) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (view != null) {
+                    view.setEnabled(enabled);
+                }
             }
         });
     }
@@ -130,8 +160,19 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        setEnabled(pingButton, false);
+
         // Perform a single synchronous ping
-        PingResult pingResult = Ping.onAddress(ipAddress).setTimeOutMillis(1000).doPing();
+        PingResult pingResult = null;
+        try {
+            pingResult = Ping.onAddress(ipAddress).setTimeOutMillis(1000).doPing();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            appendResultsText(e.getMessage());
+            setEnabled(pingButton, true);
+            return;
+        }
+
 
         appendResultsText("Pinging Address: " + pingResult.getAddress().getHostAddress());
         appendResultsText("HostName: " + pingResult.getAddress().getHostName());
@@ -142,7 +183,11 @@ public class MainActivity extends AppCompatActivity {
         Ping.onAddress(ipAddress).setTimeOutMillis(1000).setTimes(5).doPing(new Ping.PingListener() {
             @Override
             public void onResult(PingResult pingResult) {
-                appendResultsText(String.format("%.2f ms", pingResult.getTimeTaken()));
+                if (pingResult.isReachable) {
+                    appendResultsText(String.format("%.2f ms", pingResult.getTimeTaken()));
+                } else {
+                    appendResultsText(getString(R.string.timeout));
+                }
             }
 
             @Override
@@ -151,11 +196,13 @@ public class MainActivity extends AppCompatActivity {
                         pingStats.getNoPings(), pingStats.getPacketsLost()));
                 appendResultsText(String.format("Min/Avg/Max Time: %.2f/%.2f/%.2f ms",
                         pingStats.getMinTimeTaken(), pingStats.getAverageTimeTaken(), pingStats.getMaxTimeTaken()));
+                setEnabled(pingButton, true);
             }
 
             @Override
             public void onError(Exception e) {
                 // TODO: STUB METHOD
+                setEnabled(pingButton, true);
             }
         });
 
@@ -169,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        setEnabled(wolButton, false);
+
         appendResultsText("IP address: " + ipAddress);
 
         // Get mac address from IP (using arp cache)
@@ -176,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (macAddress == null) {
             appendResultsText("Could not fromIPAddress MAC address, cannot send WOL packet without it.");
+            setEnabled(wolButton, true);
             return;
         }
 
@@ -187,7 +237,10 @@ public class MainActivity extends AppCompatActivity {
             WakeOnLan.sendWakeOnLan(ipAddress, macAddress);
             appendResultsText("WOL Packet sent");
         } catch (IOException e) {
+            appendResultsText(e.getMessage());
             e.printStackTrace();
+        } finally {
+            setEnabled(wolButton, true);
         }
     }
 
@@ -196,8 +249,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(ipAddress)) {
             appendResultsText("Invalid Ip Address");
+            setEnabled(portScanButton, true);
             return;
         }
+
+        setEnabled(portScanButton, false);
 
         // Perform synchronous port scan
         appendResultsText("PortScanning IP: " + ipAddress);
@@ -216,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
             public void onFinished(ArrayList<Integer> openPorts) {
                 appendResultsText("Open Ports: " + openPorts.size());
                 appendResultsText("Time Taken: " + ((System.currentTimeMillis() - startTimeMillis)/1000.0f));
+                setEnabled(portScanButton, true);
             }
         });
 
@@ -225,6 +282,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void findSubnetDevices() {
+
+        setEnabled(subnetDevicesButton, false);
 
         final long startTimeMillis = System.currentTimeMillis();
 
@@ -239,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
                 float timeTaken =  (System.currentTimeMillis() - startTimeMillis)/1000.0f;
                 appendResultsText("Devices Found: " + devicesFound.size());
                 appendResultsText("Finished "+timeTaken+" s");
+                setEnabled(subnetDevicesButton, true);
             }
         });
 
