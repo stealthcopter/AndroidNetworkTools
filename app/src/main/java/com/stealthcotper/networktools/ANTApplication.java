@@ -1,7 +1,6 @@
 package com.stealthcotper.networktools;
 
 import android.app.Application;
-import android.os.StrictMode;
 
 public class ANTApplication extends Application {
 
@@ -16,17 +15,17 @@ public class ANTApplication extends Application {
 
             // Let's be super strict so that we can discover bugs during testing
 
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .penaltyDeath()
-                    .build());
-
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .penaltyDeath()
-                    .build());
+//            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//                    .detectAll()
+//                    .penaltyLog()
+////                    .penaltyDeath()
+//                    .build());
+//
+//            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//                    .detectAll()
+//                    .penaltyLog()
+////                    .penaltyDeath()
+//                    .build());
         }
     }
 

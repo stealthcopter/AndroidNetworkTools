@@ -32,8 +32,8 @@ android {
     applicationId "com.stealthcotper.networktools"
     minSdkVersion minSdkVer
     targetSdkVersion targetSdkVer
-    versionName appVersionName
-    versionCode appVersionCode
+    versionName "0.4.4"
+    versionCode 18
     archivesBaseName = "AndroidNetworkTools"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }

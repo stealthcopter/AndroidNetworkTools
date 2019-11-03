@@ -67,6 +67,7 @@ public class PingNative {
                 break;
         }
         pingResult.error = pingError;
+        proc.destroy();
         return pingResult;
     }
 
