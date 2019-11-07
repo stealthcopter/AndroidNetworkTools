@@ -1,0 +1,11 @@
+This is a sample application from the open source project Android Network Tools. If you are looking for a more complete network scanning tool, please see my other app Portdroid.
+
+It demonstrates the following features of the library:
+
+• Pinging
+• Port Scanning
+• Finding devices on your network
+• Wake-on-lan
+
+The project is hosted on github. Bug reports, feature requests and contributions are all welcome:
+https://github.com/stealthcopter/AndroidNetworkTools
