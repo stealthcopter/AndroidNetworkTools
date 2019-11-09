@@ -34,8 +34,8 @@ android {
     targetSdkVersion targetSdkVer
 
     // When updating these, remember to update the vars in the root build.gradle
-    versionName "0.4.5"
-    versionCode 19
+    versionName "0.4.5.2"
+    versionCode 20
 
     archivesBaseName = "AndroidNetworkTools"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
