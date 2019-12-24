@@ -1,0 +1,12 @@
+<resources>
+  <string name="app_name">Network Tools Library</string>
+  <string name="action_settings">Einstellungen</string>
+  <string name="hint_ip_address">IP Adresse oder Hostname</string>
+  <string name="ping">Ping</string>
+  <string name="wol">Wake-On-Lan</string>
+  <string name="port_scan">Port Scan</string>
+  <string name="github_page">Github</string>
+  <string name="github_url">https://github.com/stealthcopter/AndroidNetworkTools</string>
+  <string name="subnet">Subnetz-Geräte</string>
+  <string name="timeout">** Timeout **</string>
+</resources>
