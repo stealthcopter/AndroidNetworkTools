@@ -3,8 +3,10 @@ package com.stealthcopter.networktools;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 /**
  * Created by mat on 09/12/15.
@@ -15,6 +17,9 @@ import java.util.HashMap;
  * IP address       HW type     Flags       HW address            Mask     Device
  * 192.168.18.11    0x1         0x2         00:04:20:06:55:1a     *        eth0
  * 192.168.18.36    0x1         0x2         00:22:43:ab:2a:5b     *        eth0
+ *
+ * Also looks at the output from `ip sleigh show` command
+ *
  */
 public class ARPInfo {
 
@@ -24,8 +29,7 @@ public class ARPInfo {
 
 
     /**
-     * Try to extract a hardware MAC address from a given IP address using the
-     * ARP cache (/proc/net/arp).
+     * Try to extract a hardware MAC address from a given IP address
      *
      * @param ip - IP address to search for
      * @return the MAC from the ARP cache or null in format "01:23:45:67:89:ab"
@@ -35,24 +39,13 @@ public class ARPInfo {
             return null;
         }
 
-        for (String line : getLinesInARPCache()) {
-            String[] splitted = line.split(" +");
-            if (splitted.length >= 4 && ip.equals(splitted[0])) {
-                String mac = splitted[3];
-                if (mac.matches("..:..:..:..:..:..")) {
-                    return mac;
-                } else {
-                    return null;
-                }
-            }
-        }
-        return null;
+        HashMap<String, String> cache = getAllIPAndMACAddressesInARPCache();
+        return cache.get(ip);
     }
 
 
     /**
-     * Try to extract a IP address from the given MAC address using the
-     * ARP cache (/proc/net/arp).
+     * Try to extract a IP address from the given MAC address
      *
      * @param macAddress in format "01:23:45:67:89:ab" to search for
      * @return the IP address found or null in format "192.168.0.1"
@@ -66,14 +59,15 @@ public class ARPInfo {
             throw new IllegalArgumentException("Invalid MAC Address");
         }
 
-        for (String line : getLinesInARPCache()) {
-            String[] splitted = line.split(" +");
-            if (splitted.length >= 4 && macAddress.equals(splitted[3])) {
-                return splitted[0];
+        HashMap<String, String> cache = getAllIPAndMACAddressesInARPCache();
+        for (String ip : cache.keySet()) {
+            if (cache.get(ip).equalsIgnoreCase(macAddress)) {
+                return ip;
             }
         }
         return null;
     }
+
 
     /**
      * Returns all the ip addresses currently in the ARP cache (/proc/net/arp).
@@ -95,19 +89,24 @@ public class ARPInfo {
 
 
     /**
-     * Returns all the IP/MAC address pairs currently in the ARP cache (/proc/net/arp).
+     * Returns all the IP/MAC address pairs currently in the following places
+     *
+     * 1. ARP cache (/proc/net/arp).
+     * 2. `ip neigh show` command
      *
      * @return list of IP/MAC address pairs found
      */
     public static HashMap<String, String> getAllIPAndMACAddressesInARPCache() {
-        HashMap<String, String> macList = new HashMap<>();
+        HashMap<String, String> macList = getAllIPandMACAddressesFromIPSleigh();
         for (String line : getLinesInARPCache()) {
             String[] splitted = line.split(" +");
             if (splitted.length >= 4) {
                 // Ignore values with invalid MAC addresses
                 if (splitted[3].matches("..:..:..:..:..:..")
                         && !splitted[3].equals("00:00:00:00:00:00")) {
-                    macList.put(splitted[0], splitted[3]);
+                    if (!macList.containsKey(splitted[0])) {
+                        macList.put(splitted[0], splitted[3]);
+                    }
                 }
             }
         }
@@ -140,6 +139,39 @@ public class ARPInfo {
             }
         }
         return lines;
+    }
+
+
+    /**
+     * Get the IP / MAC address pairs from `ip sleigh show` command
+     *
+     * @return hashmap of ips and mac addresses
+     */
+    private static HashMap<String, String> getAllIPandMACAddressesFromIPSleigh() {
+        HashMap<String, String> macList = new HashMap<>();
+
+        try {
+            Runtime runtime = Runtime.getRuntime();
+            Process proc = runtime.exec("ip neigh show");
+            proc.waitFor();
+            int exit = proc.exitValue();
+
+            InputStreamReader reader = new InputStreamReader(proc.getInputStream());
+            BufferedReader buffer = new BufferedReader(reader);
+            String line;
+            while ((line = buffer.readLine()) != null) {
+                String[] splits = line.split(" ");
+                if (splits.length < 4) {
+                    continue;
+                }
+                macList.put(splits[0], splits[4]);
+            }
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return macList;
     }
 
 }
