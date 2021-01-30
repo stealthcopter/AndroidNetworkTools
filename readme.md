@@ -1,3 +1,5 @@
+> :warning: **Not under active development**: I am no longer actively developing this project as I have other priorities. However, I will still review and accept pull requests with bug fixes and enhancements.
+
 # Android Network Tools ![image](./app/src/main/res/mipmap-xhdpi/ic_launcher.png)
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidNetworkTools-green.svg?style=true)](https://android-arsenal.com/details/1/3112)
