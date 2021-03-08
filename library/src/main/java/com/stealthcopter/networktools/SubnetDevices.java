@@ -20,6 +20,8 @@ public class SubnetDevices {
     private OnSubnetDeviceFound listener;
     private int timeOutMillis = 2500;
     private boolean cancelled = false;
+
+    private boolean disableProcNetMethod = false;
     private HashMap<String, String> ipMacHashMap = null;
 
     // This class is not to be instantiated
@@ -140,6 +142,15 @@ public class SubnetDevices {
     }
 
     /**
+     *
+     * @param disable if set to true we will not attempt to read from /proc/net/arp
+     *                directly. This avoids any Android 10 permissions logs appearing.
+     */
+    public void setDisableProcNetMethod(boolean disable) {
+        this.disableProcNetMethod = disableProcNetMethod;
+    }
+
+    /**
      * Cancel a running scan
      */
     public void cancel() {
@@ -165,7 +176,7 @@ public class SubnetDevices {
 
                 // Load mac addresses into cache var (to avoid hammering the /proc/net/arp file when
                 // lots of devices are found on the network.
-                ipMacHashMap = ARPInfo.getAllIPAndMACAddressesInARPCache();
+                ipMacHashMap = disableProcNetMethod ? ARPInfo.getAllIPandMACAddressesFromIPSleigh() : ARPInfo.getAllIPAndMACAddressesInARPCache();
 
                 ExecutorService executor = Executors.newFixedThreadPool(noThreads);
 
@@ -187,7 +198,7 @@ public class SubnetDevices {
                 // Loop over devices found and add in the MAC addresses if missing.
                 // We do this after scanning for all devices as /proc/net/arp may add info
                 // because of the scan.
-                ipMacHashMap = ARPInfo.getAllIPAndMACAddressesInARPCache();
+                ipMacHashMap = disableProcNetMethod ? ARPInfo.getAllIPandMACAddressesFromIPSleigh() : ARPInfo.getAllIPAndMACAddressesInARPCache();
                 for (Device device : devicesFound) {
                     if (device.mac == null && ipMacHashMap.containsKey(device.ip)) {
                         device.mac = ipMacHashMap.get(device.ip);

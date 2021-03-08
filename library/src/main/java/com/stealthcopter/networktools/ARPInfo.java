@@ -145,7 +145,7 @@ public class ARPInfo {
      *
      * @return hashmap of ips and mac addresses
      */
-    private static HashMap<String, String> getAllIPandMACAddressesFromIPSleigh() {
+    public static HashMap<String, String> getAllIPandMACAddressesFromIPSleigh() {
         HashMap<String, String> macList = new HashMap<>();
 
         try {
