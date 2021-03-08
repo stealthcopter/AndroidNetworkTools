@@ -2,9 +2,6 @@ package com.stealthcopter.networktools.ping;
 
 import java.net.InetAddress;
 
-/**
- * Created by mat on 09/12/15.
- */
 public class PingResult {
     public final InetAddress ia;
     public boolean isReachable;

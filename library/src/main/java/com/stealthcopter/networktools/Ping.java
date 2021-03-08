@@ -8,9 +8,6 @@ import com.stealthcopter.networktools.ping.PingTools;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-/**
- * Created by mat on 09/12/15.
- */
 public class Ping {
 
     // Only try ping using the java method

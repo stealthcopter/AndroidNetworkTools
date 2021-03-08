@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 /**
- * Created by mat on 09/12/15.
  *
  * Tested this and it wakes my computer up :)
  *

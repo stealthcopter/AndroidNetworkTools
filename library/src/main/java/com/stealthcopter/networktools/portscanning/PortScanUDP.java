@@ -5,9 +5,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 
-/**
- * Created by mat on 13/12/15.
- */
 public class PortScanUDP {
 
     // This class is not to be instantiated

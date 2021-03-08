@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by mat on 09/12/15.
- *
  * Looks at the file at /proc/net/arp to fromIPAddress ip/mac addresses from the cache
  * We assume that the file has this structure:
  *

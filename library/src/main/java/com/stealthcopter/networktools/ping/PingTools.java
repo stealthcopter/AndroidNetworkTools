@@ -3,9 +3,6 @@ package com.stealthcopter.networktools.ping;
 import java.io.IOException;
 import java.net.InetAddress;
 
-/**
- * Created by mat on 09/12/15.
- */
 public class PingTools {
 
     // This class is not to be instantiated

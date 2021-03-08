@@ -12,9 +12,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by mat on 03/11/17.
- */
 public class SubnetDevices {
     private int noThreads = 100;
 
@@ -71,15 +68,20 @@ public class SubnetDevices {
             throw new IllegalArgumentException("Invalid IP Address");
         }
 
+        String segment = ipAddress.substring(0, ipAddress.lastIndexOf(".") + 1);
+
         SubnetDevices subnetDevice = new SubnetDevices();
 
         subnetDevice.addresses = new ArrayList<>();
 
         // Get addresses from ARP Info first as they are likely to be reachable
-        subnetDevice.addresses.addAll(ARPInfo.getAllIPAddressesInARPCache());
+        for(String ip : ARPInfo.getAllIPAddressesInARPCache()) {
+            if (ip.startsWith(segment)) {
+                subnetDevice.addresses.add(ip);
+            }
+        }
 
         // Add all missing addresses in subnet
-        String segment = ipAddress.substring(0, ipAddress.lastIndexOf(".") + 1);
         for (int j = 0; j < 255; j++) {
             if (!subnetDevice.addresses.contains(segment + j)) {
                 subnetDevice.addresses.add(segment + j);

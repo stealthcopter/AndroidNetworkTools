@@ -7,9 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 
-/**
- * Created by mat on 09/12/15.
- */
 public class PingNative {
 
     // This class is not to be instantiated

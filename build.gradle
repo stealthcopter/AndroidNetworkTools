@@ -30,7 +30,7 @@ subprojects {
   ext.targetSdkVer = 29
   ext.supportLibVer = "27.1.1"
 
-  // When updating these, remember to update the vars in app/build.gradle (for FDroid comptability)
+  // When updating these, remember to update the vars in app/build.gradle (for FDroid compatibility)
   ext.appVersionName = "0.4.5.2"
   ext.appVersionCode = 20
 }

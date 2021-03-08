@@ -5,9 +5,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-/**
- * Created by mat on 13/12/15.
- */
 public class PortScanTCP {
 
     // This class is not to be instantiated

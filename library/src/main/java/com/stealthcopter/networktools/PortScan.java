@@ -11,9 +11,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by mat on 14/12/15.
- */
 public class PortScan {
 
     private static final int TIMEOUT_LOCALHOST = 25;

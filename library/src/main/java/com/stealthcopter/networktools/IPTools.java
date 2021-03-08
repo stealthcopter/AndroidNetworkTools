@@ -8,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
 
-/**
- * Created by mat on 14/12/15.
- */
 public class IPTools {
 
     /**
