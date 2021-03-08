@@ -1,3 +1,5 @@
+> :warning: **Not under active development**: I am no longer actively developing this project as I have other priorities. However, I will still review and accept pull requests with bug fixes and enhancements.
+
 # Android Network Tools ![image](./app/src/main/res/mipmap-xhdpi/ic_launcher.png)
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidNetworkTools-green.svg?style=true)](https://android-arsenal.com/details/1/3112)
@@ -17,9 +19,14 @@ The javadoc should provide all information needed to understand the methods, but
 
 ### Sample app
 
-The sample app is published on Google play to allow you to quickly and easier test the library. Enjoy! And please do feedback to us if your tests produce different results. 
+The sample app is published on Google Play & F-Droid to allow you to quickly and easier test the library. Enjoy! And please do feedback to us if your tests produce different results. 
  
-<a href="https://play.google.com/store/apps/details?id=com.stealthcotper.networktools&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" width="150"/></a>
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="70">](https://f-droid.org/packages/com.stealthcotper.networktools/)
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+     alt="Get it on Google Play"
+     height="70">](https://play.google.com/store/apps/details?id=com.stealthcotper.networktools)
 
 ## Usage
 
@@ -41,7 +48,7 @@ then add a library dependency. **Remember** to check for latest release [here](h
 
 ```groovy
     dependencies {
-        compile 'com.github.stealthcopter:AndroidNetworkTools:0.4.0'
+        compile 'com.github.stealthcopter:AndroidNetworkTools:0.4.5.3'
     }
 ```
 
@@ -140,7 +147,6 @@ Other useful methods:
 
 It's a standard gradle project.
 
-
 # Contributing
 
 I welcome pull requests, issues and feedback.
@@ -150,4 +156,3 @@ I welcome pull requests, issues and feedback.
 - Commit your changes (git commit -am 'Added some feature')
 - Push to the branch (git push origin my-new-feature)
 - Create new Pull Request
-

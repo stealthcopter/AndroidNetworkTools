@@ -1,5 +1,6 @@
 package com.stealthcopter.networktools;
 
+import static org.hamcrest.CoreMatchers.is;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -7,9 +8,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by matthew on 03/11/17.
@@ -36,48 +35,25 @@ public class IPToolsTest {
 
     @Test
     public void testIsIPv4Address() {
-
-        for (String address : getIPv4Addresses()) {
-            assertTrue(IPTools.isIPv4Address(address));
-        }
-
-        for (String address : getIPv6Addresses()) {
-            assertFalse(IPTools.isIPv4Address(address));
-        }
-
-        for (String address : getInvalidIpAddresses()) {
-            assertFalse(IPTools.isIPv4Address(address));
-        }
+        assertIPv4Address(getIPv4Addresses(), true);
+        assertIPv4Address(getIPv6Addresses(), false);
+        assertIPv4Address(getInvalidIpAddresses(), false);
     }
+
+
 
     @Test
     public void testIsIPv6Address() {
-        for (String address : getIPv4Addresses()) {
-            assertFalse(IPTools.isIPv6Address(address));
-        }
-
-        for (String address : getIPv6Addresses()) {
-            assertTrue(IPTools.isIPv6Address(address));
-        }
-
-        for (String address : getInvalidIpAddresses()) {
-            assertFalse(IPTools.isIPv6Address(address));
-        }
+        assertIPv6Address(getIPv4Addresses(), false);
+        assertIPv6Address(getIPv6Addresses(), true);
+        assertIPv6Address(getInvalidIpAddresses(), false);
     }
 
     @Test
     public void testIsIPv6AddressesStandard() {
-        for (String address : getIPv4Addresses()) {
-            assertFalse(IPTools.isIPv6StdAddress(address));
-        }
-
-        for (String address : getIPv6Addresses()) {
-            assertTrue(IPTools.isIPv6StdAddress(address));
-        }
-
-        for (String address : getInvalidIpAddresses()) {
-            assertFalse(IPTools.isIPv6StdAddress(address));
-        }
+        assertIPv6StdAddress(getIPv4Addresses(), false);
+        assertIPv6StdAddress(getIPv6Addresses(), true);
+        assertIPv6StdAddress(getInvalidIpAddresses(), false);
     }
 
     @Test
@@ -121,6 +97,24 @@ public class IPToolsTest {
     @Test
     public void testLocalAddressesNetwork() throws UnknownHostException {
         assertFalse(IPTools.isIpAddressLocalNetwork(InetAddress.getByName("8.8.8.8")));
+    }
+
+    private void assertIPv4Address(String[] ips, boolean isIPv4Address) {
+        for (String address : ips) {
+            assertThat(IPTools.isIPv4Address(address), is(isIPv4Address));
+        }
+    }
+
+    private void assertIPv6Address(String[] ips, boolean isIPv6Address) {
+        for (String address : ips) {
+            assertThat(IPTools.isIPv6Address(address), is(isIPv6Address));
+        }
+    }
+
+    private void assertIPv6StdAddress(String[] ips, boolean isIPv6StdAddress) {
+        for (String address : ips) {
+            assertThat(IPTools.isIPv6StdAddress(address), is(isIPv6StdAddress));
+        }
     }
 
 }

@@ -6,7 +6,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.5.1'
+    classpath 'com.android.tools.build:gradle:3.5.3'
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
   }
@@ -30,7 +30,9 @@ subprojects {
   ext.targetSdkVer = 29
   ext.supportLibVer = "27.1.1"
 
-  // When updating these, remember to update the vars in app/build.gradle (for FDroid compatibility)
-  ext.appVersionName = "0.4.5.2"
-  ext.appVersionCode = 20
+  // When updating these, remember to update the vars in app/build.gradle (for FDroid comptability)
+  // Remember to update readme, and lets keep these version numbers in line with the github releases
+  ext.appVersionName = "0.4.5.3"
+  ext.appVersionCode = 21
+
 }
