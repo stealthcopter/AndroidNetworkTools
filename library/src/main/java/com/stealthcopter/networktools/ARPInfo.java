@@ -1,6 +1,7 @@
 package com.stealthcopter.networktools;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -118,6 +119,12 @@ public class ARPInfo {
      */
     private static ArrayList<String> getLinesInARPCache() {
         ArrayList<String> lines = new ArrayList<>();
+
+        // If we cant read the file just return empty list
+        if (!new File("/proc/net/arp").canRead()){
+            return lines;
+        }
+
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader("/proc/net/arp"));
