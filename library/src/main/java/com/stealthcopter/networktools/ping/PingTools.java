@@ -18,14 +18,14 @@ public class PingTools {
      * on failure.
      *
      * @param ia            - address to ping
-     * @param timeOutMillis - timeout in millisecdonds
+     * @param pingOptions   - ping command options
      * @return - the ping results
      */
-    public static PingResult doPing(InetAddress ia, int timeOutMillis) {
+    public static PingResult doPing(InetAddress ia, PingOptions pingOptions) {
 
         // Try native ping first
         try {
-            return PingTools.doNativePing(ia, timeOutMillis);
+            return PingTools.doNativePing(ia, pingOptions);
         } catch (InterruptedException e) {
             PingResult pingResult = new PingResult(ia);
             pingResult.isReachable = false;
@@ -35,7 +35,7 @@ public class PingTools {
         }
 
         // Fallback to java based ping
-        return PingTools.doJavaPing(ia, timeOutMillis);
+        return PingTools.doJavaPing(ia, pingOptions);
     }
 
 
@@ -43,13 +43,13 @@ public class PingTools {
      * Perform a ping using the native ping binary
      *
      * @param ia            - address to ping
-     * @param timeOutMillis - timeout in millisecdonds
+     * @param pingOptions   - ping command options
      * @return - the ping results
      * @throws IOException - IO error running ping command
-     * @throws InterruptedException - thread interupt
+     * @throws InterruptedException - thread interrupt
      */
-    public static PingResult doNativePing(InetAddress ia, int timeOutMillis) throws IOException, InterruptedException {
-        return PingNative.ping(ia, timeOutMillis);
+    public static PingResult doNativePing(InetAddress ia, PingOptions pingOptions) throws IOException, InterruptedException {
+        return PingNative.ping(ia, pingOptions);
     }
 
     /**
@@ -58,10 +58,10 @@ public class PingTools {
      * on port 7 (Echo) of the remote host.
      *
      * @param ia            - address to ping
-     * @param timeOutMillis - timeout in millisecdonds
+     * @param pingOptions   - ping command options
      * @return - the ping results
      */
-    public static PingResult doJavaPing(InetAddress ia, int timeOutMillis) {
+    public static PingResult doJavaPing(InetAddress ia, PingOptions pingOptions) {
         PingResult pingResult = new PingResult(ia);
 
         if (ia == null) {
@@ -71,7 +71,7 @@ public class PingTools {
 
         try {
             long startTime = System.nanoTime();
-            final boolean reached = ia.isReachable(timeOutMillis);
+            final boolean reached = ia.isReachable(null, pingOptions.getTimeToLive(), pingOptions.getTimeoutMillis());
             pingResult.timeTaken = (System.nanoTime() - startTime) / 1e6f;
             pingResult.isReachable = reached;
             if (!reached) pingResult.error = "Timed Out";

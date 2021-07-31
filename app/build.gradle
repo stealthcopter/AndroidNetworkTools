@@ -32,8 +32,11 @@ android {
     applicationId "com.stealthcotper.networktools"
     minSdkVersion minSdkVer
     targetSdkVersion targetSdkVer
-    versionName appVersionName
-    versionCode appVersionCode
+
+    // When updating these, remember to update the vars in the root build.gradle
+    versionName "0.4.5.3"
+    versionCode 21
+
     archivesBaseName = "AndroidNetworkTools"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }

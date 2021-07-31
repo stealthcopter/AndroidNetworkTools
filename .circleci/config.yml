@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/android:api-25-alpha
+      - image: circleci/android:api-29
     environment:
         GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
     steps:
@@ -15,7 +15,7 @@ jobs:
           name: Copy Environment Vars
           command: scripts/cp-env-to-properties.sh
           
-      # Decrypt any secret files / keys
+      # Decrypt any secret files / keys 
       - run:
           name: Decrypt secret files
           command: scripts/decrypt-secrets.sh

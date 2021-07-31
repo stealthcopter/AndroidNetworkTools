@@ -1,5 +1,6 @@
 package com.stealthcopter.networktools;
 
+import com.stealthcopter.networktools.ping.PingOptions;
 import com.stealthcopter.networktools.ping.PingResult;
 import com.stealthcopter.networktools.ping.PingStats;
 import com.stealthcopter.networktools.ping.PingTools;
@@ -34,7 +35,7 @@ public class Ping {
 
     private String addressString = null;
     private InetAddress address;
-    private int timeOutMillis = 1000;
+    private final PingOptions pingOptions = new PingOptions();
     private int delayBetweenScansMillis = 0;
     private int times = 1;
     private boolean cancelled = false;
@@ -74,7 +75,7 @@ public class Ping {
      */
     public Ping setTimeOutMillis(int timeOutMillis) {
         if (timeOutMillis < 0) throw new IllegalArgumentException("Times cannot be less than 0");
-        this.timeOutMillis = timeOutMillis;
+        pingOptions.setTimeoutMillis(timeOutMillis);
         return this;
     }
 
@@ -88,6 +89,18 @@ public class Ping {
         if (delayBetweenScansMillis < 0)
             throw new IllegalArgumentException("Delay cannot be less than 0");
         this.delayBetweenScansMillis = delayBetweenScansMillis;
+        return this;
+    }
+
+    /**
+     * Set the time to live
+     *
+     * @param timeToLive - the TTL for each ping
+     * @return this object to allow chaining
+     */
+    public Ping setTimeToLive(int timeToLive) {
+        if (timeToLive < 1) throw new IllegalArgumentException("TTL cannot be less than 1");
+        pingOptions.setTimeToLive(timeToLive);
         return this;
     }
 
@@ -146,7 +159,7 @@ public class Ping {
     public PingResult doPing() throws UnknownHostException {
         cancelled = false;
         resolveAddressString();
-        return PingTools.doPing(address, timeOutMillis);
+        return PingTools.doPing(address, pingOptions);
     }
 
     /**
@@ -184,7 +197,7 @@ public class Ping {
 
                 // times == 0 is the case that we can continuous scanning
                 while (noPings > 0 || times == 0) {
-                    PingResult pingResult = PingTools.doPing(address, timeOutMillis);
+                    PingResult pingResult = PingTools.doPing(address, pingOptions);
 
                     if (pingListener != null) {
                         pingListener.onResult(pingResult);
