@@ -1,38 +1,56 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
+  ext {
+    kotlin_version = '1.8.10'
+  }
   repositories {
     google()
-    jcenter()
+    mavenCentral()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.5.3'
+    classpath 'com.android.tools.build:gradle:7.4.1'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
   }
+}
+plugins {
+  id 'org.jetbrains.kotlin.jvm' version '1.8.10'
 }
 
 allprojects {
   repositories {
     google()
-    jcenter()
+    mavenCentral()
   }
 }
 
-task clean(type: Delete) {
-  delete rootProject.buildDir
-}
 
 subprojects {
-  ext.compileSdkVer = 29
-  ext.buildToolsVer = "29.0.1"
+  ext.compileSdkVer = 33
+  ext.buildToolsVer = "33.0.0"
   ext.minSdkVer = 14
-  ext.targetSdkVer = 29
+  ext.targetSdkVer = 33
   ext.supportLibVer = "27.1.1"
 
   // When updating these, remember to update the vars in app/build.gradle (for FDroid comptability)
   // Remember to update readme, and lets keep these version numbers in line with the github releases
-  ext.appVersionName = "0.4.5.3"
-  ext.appVersionCode = 21
-
+  ext.appVersionName = "0.4.6"
+  ext.appVersionCode = 22
+}
+repositories {
+  mavenCentral()
+}
+dependencies {
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+compileKotlin {
+  kotlinOptions {
+    jvmTarget = "11"
+  }
+}
+compileTestKotlin {
+  kotlinOptions {
+    jvmTarget = "11"
+  }
 }

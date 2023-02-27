@@ -5,6 +5,7 @@
   <string name="ping">Ping</string>
   <string name="wol">Wake-On-Lan</string>
   <string name="port_scan">Port Scan</string>
+  <string name="clear_log">Clear Log</string>
   <string name="github_page">Github</string>
   <string name="github_url">https://github.com/stealthcopter/AndroidNetworkTools</string>
   <string name="subnet">Subnet Devices</string>
