@@ -16,7 +16,7 @@ public class PingNative {
     private PingNative() {
     }
 
-    public static PingResult ping(InetAddress host, int timeOutMillis) throws IOException, InterruptedException {
+    public static PingResult ping(InetAddress host, PingOptions pingOptions) throws IOException, InterruptedException {
         PingResult pingResult = new PingResult(host);
 
         if (host == null) {
@@ -27,8 +27,8 @@ public class PingNative {
         StringBuilder echo = new StringBuilder();
         Runtime runtime = Runtime.getRuntime();
 
-        int timeoutSeconds = timeOutMillis / 1000;
-        if (timeoutSeconds < 0) timeoutSeconds = 1;
+        int timeoutSeconds = Math.max(pingOptions.getTimeoutMillis() / 1000, 1);
+        int ttl = Math.max(pingOptions.getTimeToLive(), 1);
 
         String address = host.getHostAddress();
         String pingCommand = "ping";
@@ -46,24 +46,28 @@ public class PingNative {
             address = host.getHostName();
         }
 
-        Process proc = runtime.exec(pingCommand + " -c 1 -w " + timeoutSeconds + " " + address);
+        Process proc = runtime.exec(pingCommand + " -c 1 -W " + timeoutSeconds + " -t " + ttl + " " + address);
         proc.waitFor();
         int exit = proc.exitValue();
         String pingError;
-        if (exit == 0) {
-            InputStreamReader reader = new InputStreamReader(proc.getInputStream());
-            BufferedReader buffer = new BufferedReader(reader);
-            String line;
-            while ((line = buffer.readLine()) != null) {
-                echo.append(line).append("\n");
-            }
-            return getPingStats(pingResult, echo.toString());
-        } else if (exit == 1) {
-            pingError = "failed, exit = 1";
-        } else {
-            pingError = "error, exit = 2";
+        switch (exit) {
+            case 0:
+                InputStreamReader reader = new InputStreamReader(proc.getInputStream());
+                BufferedReader buffer = new BufferedReader(reader);
+                String line;
+                while ((line = buffer.readLine()) != null) {
+                    echo.append(line).append("\n");
+                }
+                return getPingStats(pingResult, echo.toString());
+            case 1:
+                pingError = "failed, exit = 1";
+                break;
+            default:
+                pingError = "error, exit = 2";
+                break;
         }
         pingResult.error = pingError;
+        proc.destroy();
         return pingResult;
     }
 

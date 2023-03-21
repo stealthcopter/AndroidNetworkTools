@@ -10,14 +10,9 @@ import static junit.framework.Assert.assertNull;
 public class ARPInfoTest {
 
     @Test
-    public void nullIPsandMacsReturnNull() throws Exception {
-
+    public void nullIPsandMacsReturnNull() {
         assertNull(ARPInfo.getMACFromIPAddress(null));
         assertNull(ARPInfo.getIPAddressFromMAC(null));
-
-//        assertEquals(arpInfo.getMACFromIPAddress("192.168.18.11"), "00:04:20:06:55:1a");
-//        assertEquals(arpInfo.getIPAddressFromMAC("00:22:43:ab:2a:5b"), "192.168.18.36");
-
     }
 
     @Test(expected = IllegalArgumentException.class)

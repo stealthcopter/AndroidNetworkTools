@@ -6,7 +6,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.1.3'
+    classpath 'com.android.tools.build:gradle:3.5.1'
     // NOTE: Do not place your application dependencies here; they belong
     // in the individual module build.gradle files
   }
@@ -24,12 +24,13 @@ task clean(type: Delete) {
 }
 
 subprojects {
-  ext.compileSdkVer = 27
-  ext.buildToolsVer = "27.0.3"
+  ext.compileSdkVer = 29
+  ext.buildToolsVer = "29.0.1"
   ext.minSdkVer = 14
-  ext.targetSdkVer = 27
+  ext.targetSdkVer = 29
   ext.supportLibVer = "27.1.1"
 
-  ext.appVersionName = "0.4.0"
-  ext.appVersionCode = 14
+  // When updating these, remember to update the vars in app/build.gradle (for FDroid comptability)
+  ext.appVersionName = "0.4.5"
+  ext.appVersionCode = 19
 }

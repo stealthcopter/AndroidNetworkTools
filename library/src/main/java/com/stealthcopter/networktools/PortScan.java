@@ -288,7 +288,7 @@ public class PortScan {
     }
 
     /**
-     * Perform a synchronous port scan and return a list of open ports
+     * Perform a synchronous (blocking) port scan and return a list of open ports
      *
      * @return - ping result
      */
@@ -320,7 +320,7 @@ public class PortScan {
     }
 
     /**
-     * Perform an asynchronous port scan
+     * Perform an asynchronous (non-blocking) port scan
      *
      * @param portListener - the listener to fire portscan results to.
      * @return - this object so we can cancel the scan if needed

@@ -84,6 +84,7 @@
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/activity_horizontal_margin"
