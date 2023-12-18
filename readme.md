@@ -2,6 +2,7 @@
 
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidNetworkTools-green.svg?style=true)](https://android-arsenal.com/details/1/3112)
 [![CircleCI](https://circleci.com/gh/stealthcopter/AndroidNetworkTools.svg?style=svg)](https://circleci.com/gh/stealthcopter/AndroidNetworkTools)
+<a href="https://www.buymeacoffee.com/stealthcopter"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-yellow.png" height="20px"></a>
 
 Disappointed by the lack of good network apis in android / java I developed a collection of handy networking tools for everyday android development.
 
@@ -14,6 +15,11 @@ Disappointed by the lack of good network apis in android / java I developed a co
 ## General info
 
 The javadoc should provide all information needed to understand the methods, but if not feel free to add a issue in github and I'll address any questions! :)
+
+# Support
+If you love what I'm doing with Android Network Tools and my other projects, you can now support my work directly! By buying me a coffee ☕, you're not just fueling my caffeine needs – you're helping me dedicate more time to developing and improving these open source projects. Every coffee counts and brings more innovation to the cybersecurity world. Thank you for your support – it means the world to me and the open source community!
+
+<a href="https://www.buymeacoffee.com/stealthcopter"><img src="https://cdn.buymeacoffee.com/buttons/v2/arial-yellow.png" height="50px"></a>
 
 ### Sample app
 
