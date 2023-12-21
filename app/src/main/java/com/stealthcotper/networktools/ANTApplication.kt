@@ -1,16 +1,14 @@
-package com.stealthcotper.networktools;
+package com.stealthcotper.networktools
 
-import android.app.Application;
+import android.app.Application
 
-public class ANTApplication extends Application {
-
-    @Override
-    public void onCreate() {
-        initStrictMode();
-        super.onCreate();
+class ANTApplication : Application() {
+    override fun onCreate() {
+        initStrictMode()
+        super.onCreate()
     }
 
-    private void initStrictMode() {
+    private fun initStrictMode() {
         if (BuildConfig.DEBUG) {
 
             // Let's be super strict so that we can discover bugs during testing
@@ -28,6 +26,4 @@ public class ANTApplication extends Application {
 //                    .build());
         }
     }
-
-
 }

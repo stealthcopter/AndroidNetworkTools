@@ -1,7 +1,6 @@
 buildscript {
   repositories {
     mavenCentral()
-    jcenter()
   }
 
   dependencies {
@@ -15,6 +14,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'spoon'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 play {
   track = 'beta'
@@ -34,11 +34,11 @@ android {
     targetSdkVersion targetSdkVer
 
     // When updating these, remember to update the vars in the root build.gradle
-    versionName "0.4.5.3"
-    versionCode 21
+    versionName "0.4.6"
+    versionCode 23
 
     archivesBaseName = "AndroidNetworkTools"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
   }
 
   //check if the keystore details are defined in gradle.properties (this is so the key is not in github)
@@ -73,13 +73,13 @@ spoon {
 }
 
 dependencies {
-  implementation "com.android.support:appcompat-v7:$supportLibVer"
-  implementation "com.android.support:design:$supportLibVer"
+  implementation 'androidx.appcompat:appcompat:1.6.1'
+  implementation 'com.google.android.material:material:1.8.0'
   implementation project(':library')
 
-  testImplementation 'junit:junit:4.12'
+  testImplementation 'junit:junit:4.13.2'
 
   androidTestImplementation 'com.squareup.spoon:spoon-client:1.6.4'
-  androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-  androidTestImplementation('com.android.support.test.espresso:espresso-intents:2.2')
+  androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+  androidTestImplementation('androidx.test.espresso:espresso-intents:3.5.1')
 }
