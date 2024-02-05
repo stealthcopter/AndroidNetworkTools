@@ -75,6 +75,9 @@ public class PingTools {
         } catch (IOException e) {
             pingResult.isReachable = false;
             pingResult.error = "IOException: " + e.getMessage();
+        } catch (NullPointerException e) {
+            pingResult.isReachable = false;
+            pingResult.error = "NullPointerException: " + e.getMessage();
         }
         return pingResult;
     }
